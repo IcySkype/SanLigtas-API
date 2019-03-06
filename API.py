@@ -1,58 +1,38 @@
-from flask import Flask, request
-from flask_restful import Resource, Api
-from sqlalchemy import create_engine
-from json import dumps
+from config import app
+from flask import request
 from flask_jsonpify import jsonify
+from flask_restful import reqparse, abort, Resource
+from json import dumps
+from Models import *
 from passlib.apps import custom_app_context as pwd_context
+from sqlalchemy import create_engine
 
-#No db yet.
-db_connect = create_engine('postgresql://postgres:postgres@localhost:5432/SLDB')
-app = Flask(__name__)
-api = Api(app)
+#parser = reqparse.RequestParser()
+#parser.add_argument
 
+@app_route("/", methods=['GET'])
+def home():
+	return jsonify([{'text':'hello world'}])
 
-class User(db.Model):
-	#attributes
-	__tablename__ = 'Users'
-	id = db.Column('user_id', db.Integer())
-	username = db.Column('username', db.String())
-	pass_hash = db.Column('pass', db.String())
+@app_route("/api/v1/users", method=['GET'])
+def get_users():
+	userlist = User.query.all()
+	return jsonify(json_list=[i.serialize for i in userlist])
 
-	#methods
-	def __init__(self, attributes):
-		self.attributes setup
-
-	def hash_pass(self, pass):
-		self.pass_hash = pwd_context.encrypt(pass)
-
-	def verify_pass(self, pass):
-		return pwd_context.verify(pass, self.pass_hash)
-
-	def is_authenticated(self):
-		return True
-
-	def is_active(self):
-		return True
-
-	def get_id(self):
-		return unicode(self.id)
-
-class User_Name(Resource):
-	def get(self, id):
-		query = User.query.filter_by(id=id)
-		result = {'data': [dict(zip(tuple(query.keys()),i)) for i in query]}
-		return jsonify(result)
-
-api.add_resource(User_Name, '/user/<id>')
-
-@app_route("/")
-def hello():
-	return jsonify({'hello world'})
-
+"""
+Testing using flask_restful.
+class Users(Resource):
+	def get(self):
+		userlist = User.query.all()
+		return jsonify(json_list=[i.serialize for i in userlist])
+	
+	def post(self):
+		args = parser. 
+"""
 @login_manager.user_loader
-def load_user(id)
+def load_user(id):
 	reg_user = User.query.filter_by(id=id).first()
 	return reg_user
 
-if __name__ == '__main__'
+if __name__ == '__main__':
 	app.run(debug=True)
