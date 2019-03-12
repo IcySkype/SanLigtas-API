@@ -1,6 +1,6 @@
 import os
 
-postgres_local_base = 'postgresql://postgres:postgres@localhost:5432/SLDB'
+postgres_local_base = 'postgresql://postgres:postgres@localhost:5432/restplus'
 #os.environ['DATABASE_URL']
 
 basedir = os.path.abspath(os.path.dirname(__file__))
