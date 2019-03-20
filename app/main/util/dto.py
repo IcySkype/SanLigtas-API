@@ -16,3 +16,11 @@ class AuthDto:
 		'email' : fields.String(required=True, description='The Email Address'),
 		'password' : fields.String(required=True, description='The User Password')
 	})
+
+class DistCenterDto:
+	api = Namespace('distcenter', description='Distribution Center related operations')
+	distcenter = api.model('distcenter',{
+		'name' : fields.String(required=True, description='Distribution Center Name'),
+		'address' : fields.String(required=True, description='Physical Address of the Distribution Center'),
+		'capacity' : fields.String(required=True, description='Distribution Center Capacity')
+	})
