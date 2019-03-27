@@ -14,7 +14,7 @@ class UserList(Resource):
 	@api.marshal_list_with(_dcenter, envelope='data')
 	def get(self):
 		return get_all_dcenters()
-	@api.response(201, 'User successfully created.')
+	@api.response(201, 'Center successfully created.')
 
 
 	@api.doc('add a new distribution center')
