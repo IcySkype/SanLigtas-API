@@ -10,7 +10,7 @@ _dcenter = DistCenterDto.distcenter
 
 
 @api.route('/')
-class UserList(Resource):
+class DCenterList(Resource):
 	@api.doc('list_of_registered_distribution_centers')
 	@api.marshal_list_with(_dcenter, envelope='data')
 	@token_required
@@ -26,7 +26,7 @@ class UserList(Resource):
 		return save_new_dcenter(data=data)
 
 
-@api.route('/dcenter/<id>')
+@api.route('/<id>')
 @api.param('id', 'The Distribution Center ID')
 @api.response(404, 'Distribution Center not found.')
 class DistCenter(Resource):
@@ -42,7 +42,6 @@ class DistCenter(Resource):
 
 
 	@api.doc('delete a distribution center')
-	@api.marshal_list_with(_dcenter)
 	@admin_token_required
 	def delete(self, id):
 		dcenter = delete_dcenter(id)
@@ -54,8 +53,7 @@ class DistCenter(Resource):
 
 	@api.doc('update a distribution center')
 	@api.expect(_dcenter, validate=True)
-	@api.marshal_list_with(_dcenter)
-	@admin_token_required	
+	@admin_token_required
 	def put(self, id):
 		data = request.json
 		dcenter = update_dcenter(id=id, data=data)
