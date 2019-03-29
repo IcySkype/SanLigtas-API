@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import DistCenterDto
-from ..service.user_service import save_new_dcenter, get_all_dcenters, get_a_dcenter, update_dcenter, delete_dcenter
+from ..service.distcenter_service import save_new_dcenter, get_all_dcenters, get_a_dcenter, update_dcenter, delete_dcenter
 
 api = DistCenterDto.api
 _dcenter = DistCenterDto.distcenter
