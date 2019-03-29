@@ -9,7 +9,7 @@ def save_new_user(data):
 	user = User.query.filter_by(email=data['email']).first()
 	if not user:
 		new_user = User(
-			public_id=str(uuid.uuid4()),
+			public_id=data['public_id'],
 			email=data['email'],
 			username=data['username'],
 			password=data['password'],
