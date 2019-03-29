@@ -16,8 +16,8 @@ class UserList(Resource):
 	@token_required
 	def get(self):
 		return get_all_dcenters()
-
-	@api.response(201, 'User successfully created.')
+  
+	@api.response(201, 'Center successfully created.')
 	@api.doc('add a new distribution center')
 	@api.expect(_dcenter, validate=True)
 	@admin_token_required
