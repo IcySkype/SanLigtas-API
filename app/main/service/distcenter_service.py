@@ -30,7 +30,6 @@ def save_new_dcenter(data):
 def get_all_dcenters():
 	return DistCenter.query.all()
 
-
 def get_a_dcenter(id):
 	return DistCenter.query.filter_by(id=id).first()
 
@@ -43,9 +42,9 @@ def update_dcenter(id, data):
 	dcenter = DistCenter.query.filter_by(id=id).first()
 	if dcenter:
 		if DistCenter.query.filter_by(address=data['address']).count() == 0 or DistCenter.query.filter_by(address=data['address']).count() == 1 and dcenter.address == newdata['address']:
-			dcenter.name=newdata['name'],
-			dcenter.address=newdata['address'],
-			dcenter.capacity=newdata['capacity']
+			dcenter.name=data['name'],
+			dcenter.address=data['address'],
+			dcenter.capacity=data['capacity']
 			db.session.commit()
 			response_object = {
 			'status' : 'success',
