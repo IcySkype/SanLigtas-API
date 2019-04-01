@@ -7,6 +7,7 @@ from ..service.user_service import save_new_user, get_all_users, get_a_user, del
 
 api = UserDto.api
 _user = UserDto.user
+parser= UserDto.parser
 
 
 @api.route('/')
@@ -18,11 +19,10 @@ class UserList(Resource):
 		return get_all_users()
 
 	@api.response(201, 'User successfully created.')
-	@api.doc('create a new user')
-	@api.expect(_user, validate=True)
+	@api.doc('create a new user', parser=parser)
 	def post(self):
 		#create new user
-		data = request.json
+		data = request.form
 		return save_new_user(data=data)
 
 @api.route('/<public_id>')
@@ -40,19 +40,26 @@ class User(Resource):
 			return user
 	
 	@api.doc('delete a user')
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@token_required
 	def delete(self, public_id):
 		#delete a specific user with public_id
-		user = delete_user(public_id)
+		user = get_a_user(public_id)
 		if not user:
 			api.abort(404)
 		else:
 			return delete_user(user)
-	
+	@api.response(201, 'User Succesfully Deleted.')
+
+
 	@api.doc('update a user')
-	@api.expect(_dcenter, validate=True)
+	@api.expect(_user, validate=True)
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@token_required
 	def put(self, public_id):
-		#update a specific user with public_id
 		user = get_a_user(public_id)
+		data = request.json
+		user = update_user(public_id, data)
 		if not user:
 			api.abort(404)
 		else:

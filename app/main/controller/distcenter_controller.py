@@ -7,19 +7,21 @@ from ..service.distcenter_service import save_new_dcenter, get_all_dcenters, get
 
 api = DistCenterDto.api
 _dcenter = DistCenterDto.distcenter
+parser = DistCenterDto.parser
 
 
 @api.route('/')
 class DCenterList(Resource):
 	@api.doc('list_of_registered_distribution_centers')
 	@api.marshal_list_with(_dcenter, envelope='data')
+	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	def get(self):
 		return get_all_dcenters()
   
 	@api.response(201, 'Center successfully created.')
-	@api.doc('add a new distribution center')
-	@api.expect(_dcenter, validate=True)
+	@api.doc('add a new distribution center', parser=parser)
+	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@admin_token_required
 	def post(self):
 		data = request.json
@@ -32,6 +34,7 @@ class DCenterList(Resource):
 class DistCenter(Resource):
 	@api.doc('get a distribution center')
 	@api.marshal_list_with(_dcenter)
+	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	def get(self, id):
 		dcenter = get_a_dcenter(id)
@@ -42,6 +45,7 @@ class DistCenter(Resource):
 
 
 	@api.doc('delete a distribution center')
+	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@admin_token_required
 	def delete(self, id):
 		dcenter = delete_dcenter(id)
@@ -53,6 +57,7 @@ class DistCenter(Resource):
 
 	@api.doc('update a distribution center')
 	@api.expect(_dcenter, validate=True)
+	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@admin_token_required
 	def put(self, id):
 		data = request.json

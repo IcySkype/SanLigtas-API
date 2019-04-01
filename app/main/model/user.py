@@ -36,9 +36,9 @@ class User(db.Model):
 		#generate auth token as string
 		try:
 			payload = {
-				'exp' : datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
-				'iat' : datetime.datetime.utcnow(),
-				'sub' : user_id
+				'exp' : datetime.datetime.utcnow() + datetime.timedelta(days=2920),#exp=expires on (date), this expires on 2920 days, est. 8 yrs.
+				'iat' : datetime.datetime.utcnow(),#iat=issued at/ when gi issue ang token
+				'sub' : user_id #sub=subject of jwt. since this is user token, ang subject kay ang user id
 			}
 			return jwt.encode(
 					payload,
