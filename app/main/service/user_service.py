@@ -9,7 +9,7 @@ def save_new_user(data):
 	user = User.query.filter_by(email=data['email']).first()
 	if not user:
 		new_user = User(
-			public_id=str(uuid.uuid4()),
+			public_id=data['public_id'],
 			email=data['email'],
 			username=data['username'],
 			password=data['password'],
@@ -36,13 +36,13 @@ def delete_user(public_id):
 	db.session.delete(public_id)
 	db.session.commit
 
-def update_user(public_id):
+def update_user(public_id, data):
     user = User.query.filter_by(public_id=public_id).first()
     if user:
         user.public_id = str(uuid.uuid4()),
-        user.email = ['email']
-        user.username = ['username']
-        user.password = ['password']
+        user.email = data['email']
+        user.username = data['username']
+        user.password = data['password']
         db.session.commit()
         response_object = {
             'status': 'Success',
