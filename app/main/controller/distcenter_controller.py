@@ -44,7 +44,7 @@ class DistCenter(Resource):
 			return dcenter
 
 
-	@api.doc('delete a distribution center')
+	@api.doc('delete a distsribution center')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@admin_token_required
 	def delete(self, id):
@@ -55,8 +55,7 @@ class DistCenter(Resource):
 			return dcenter
 
 
-	@api.doc('update a distribution center')
-	@api.expect(_dcenter, validate=True)
+	@api.doc('update a distribution center', parser=parser)
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@admin_token_required
 	def put(self, id):

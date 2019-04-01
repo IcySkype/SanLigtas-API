@@ -13,7 +13,6 @@ parser = AuthDto.parser
 @api.route('/login')
 class UserLogin(Resource):
 	@api.doc('user login', parser=parser)
-	#@api.expect(user_auth, validate=True)
 	def post(self):
 		post_data = request.json
 		return Auth.login_user(data=post_data)

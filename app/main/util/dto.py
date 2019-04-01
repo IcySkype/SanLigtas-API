@@ -13,7 +13,6 @@ class UserDto:
 	parser.add_argument('email', type=str, help='User Email Address', location='form')
 	parser.add_argument('username', type=str, help='User Username', location='form')
 	parser.add_argument('password', type=str, help='User Password', location='form')
-	parser.add_argument('public_id', type=str, help='User Identifier', location='form')
 
 class AuthDto:
 	api = Namespace('auth', description='Authentication related operations')
