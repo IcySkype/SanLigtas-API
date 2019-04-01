@@ -31,14 +31,16 @@ class TestAuthBlueprint(BaseTestCase):
 		with self.client:
 			#user registration
 			user_response = register_user(self)
+			print (user_response)
 			response_data = json.loads(user_response.data.decode())
-			self.assertTrue(response_data['authorization'])
+			print (response_data)
+			self.assertTrue(response_data['Authorization'])
 			self.assertEqual(user_response.status_code, 201)
 
 			#user login
 			login_response = login_user(self)
 			data = json.loads(login_response.data.decode())
-			self.assertTrue(data['authorization'])
+			self.assertTrue(data['Authorization'])
 			self.assertEqual(login_response.status_code, 200)
 
 	def test_valid_logout(self):
@@ -46,21 +48,21 @@ class TestAuthBlueprint(BaseTestCase):
 			#same as previous test to initialize a test user
 			user_response = register_user(self)
 			response_data = json.loads(user_response.data.decode())
-			self.assertTrue(response_data['authorization'])
+			self.assertTrue(response_data['Authorization'])
 			self.assertEqual(user_response.status_code, 201)
 
 			login_response = login_user(self)
 			data = json.loads(login_response.data.decode())
-			self.assertTrue(data['authorization'])
+			self.assertTrue(data['Authorization'])
 			self.assertEqual(login_response.status_code, 200)
 
 			#valid token logout
 			response = self.client.post(
 				'/auth/logout',
 				headers=dict(
-					authorization='Bearer ' + json.loads(
+					Authorization='Bearer ' + json.loads(
 						login_response.data.decode()
-					)['authorization']
+					)['Authorization']
 				)
 			)
 			data = json.loads(response.data.decode())

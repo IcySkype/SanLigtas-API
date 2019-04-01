@@ -40,8 +40,13 @@ def save_changes(data):
 
 def update_dcenter(id, data):
 	dcenter = DistCenter.query.filter_by(id=id).first()
+	otherdcenters = DistCenter.query.filter(DistCenter.id != id).all()
 	if dcenter:
-		if DistCenter.query.filter_by(address=data['address']).count() == 0 or DistCenter.query.filter_by(address=data['address']).count() == 1 and dcenter.address == newdata['address']:
+		check_existing = False
+		for x in otherdcenters:
+			if x.id == data['address']:
+				check_existing = True
+		if check_existing:
 			dcenter.name=data['name'],
 			dcenter.address=data['address'],
 			dcenter.capacity=data['capacity']

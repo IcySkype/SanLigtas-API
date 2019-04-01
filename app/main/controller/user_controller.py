@@ -40,6 +40,7 @@ class User(Resource):
 			return user
 	
 	@api.doc('delete a user')
+	@api.response(204, 'User Succesfully Deleted.')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	def delete(self, public_id):
@@ -49,11 +50,9 @@ class User(Resource):
 			api.abort(404)
 		else:
 			return delete_user(user)
-	@api.response(201, 'User Succesfully Deleted.')
 
-
-	@api.doc('update a user')
-	@api.expect(_user, validate=True)
+	@api.doc('update a user', parser=parser)
+	@api.response(201, 'User Succesfully Updated.')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	def put(self, public_id):

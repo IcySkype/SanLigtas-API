@@ -9,7 +9,7 @@ def save_new_user(data):
 	user = User.query.filter_by(email=data['email']).first()
 	if not user:
 		new_user = User(
-			public_id=data['public_id'],
+			public_id=str(uuid.uuid4()),
 			email=data['email'],
 			username=data['username'],
 			password=data['password'],
@@ -86,7 +86,7 @@ def generate_token(user):
 		response_object = {
 			'status' : 'success',
 			'message' : 'Successfully registered',
-			'authorization' : auth_token.decode()
+			'Authorization' : auth_token.decode()
 		}
 		return response_object, 201
 	except Exception as e:

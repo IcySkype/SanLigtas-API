@@ -32,11 +32,11 @@ class Auth:
 			return response_object, 500
 
 	@staticmethod
-	def logout_user(data):
-		if data:
-			auth_token = data.split(" ")[1]
-		else:
-			auth_token = ''
+	def logout_user(auth_token):#data
+		#if data:
+			#auth_token = data.split(" ")[1]
+		#else:
+			#auth_token = ''
 		if auth_token:
 			resp = User.decode_auth_token(auth_token)
 			if not isinstance(resp, str):
@@ -58,7 +58,7 @@ class Auth:
 	@staticmethod
 	def get_logged_in_user(new_request):
 		#get auth token
-		auth_token = new_request.headers.get('authorization')
+		auth_token = new_request.headers.get('Authorization')
 		if auth_token:
 			resp = User.decode_auth_token(auth_token)
 			if not isinstance(resp, str):
