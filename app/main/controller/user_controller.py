@@ -9,10 +9,13 @@ api = UserDto.api
 _user = UserDto.user
 parser= UserDto.parser
 
-
+#TODO: ADMIN mu add users
+# lahi ra sya sa user mu register sa ilang selves
 @api.route('/')
 class UserList(Resource):
 	@api.doc('list_of_registered_users')
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@token_required
 	@api.marshal_list_with(_user, envelope='data')
 	def get(self):
 		#return registered user list
@@ -30,6 +33,8 @@ class UserList(Resource):
 @api.response(404, 'User not found.')
 class User(Resource):
 	@api.doc('get a user')
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@token_required
 	@api.marshal_list_with(_user)
 	def get(self, public_id):
 		#gets a specific user with public_id
@@ -57,7 +62,7 @@ class User(Resource):
 	@token_required
 	def put(self, public_id):
 		user = get_a_user(public_id)
-		data = request.json
+		data = request.form
 		user = update_user(public_id, data)
 		if not user:
 			api.abort(404)
