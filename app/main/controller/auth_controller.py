@@ -14,7 +14,7 @@ parser = AuthDto.parser
 class UserLogin(Resource):
 	@api.doc('user login', parser=parser)
 	def post(self):
-		post_data = request.json
+		post_data = request.form
 		return Auth.login_user(data=post_data)
 
 
@@ -25,4 +25,4 @@ class LogoutAPI(Resource):
 	@token_required
 	def post(self):
 		auth_header = request.headers.get('Authorization')
-		return Auth.logout_user(data=auth_header)
+		return Auth.logout_user(auth_token=auth_header)

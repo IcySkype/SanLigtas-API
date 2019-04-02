@@ -13,9 +13,9 @@ parser = DistCenterDto.parser
 @api.route('/')
 class DCenterList(Resource):
 	@api.doc('list_of_registered_distribution_centers')
-	@api.marshal_list_with(_dcenter, envelope='data')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
+	@api.marshal_list_with(_dcenter, envelope='data')
 	def get(self):
 		return get_all_dcenters()
   
@@ -24,7 +24,7 @@ class DCenterList(Resource):
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@admin_token_required
 	def post(self):
-		data = request.json
+		data = request.form
 		return save_new_dcenter(data=data)
 
 
@@ -33,9 +33,9 @@ class DCenterList(Resource):
 @api.response(404, 'Distribution Center not found.')
 class DistCenter(Resource):
 	@api.doc('get a distribution center')
-	@api.marshal_list_with(_dcenter)
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
+	@api.marshal_list_with(_dcenter)
 	def get(self, id):
 		dcenter = get_a_dcenter(id)
 		if not dcenter:
@@ -59,7 +59,7 @@ class DistCenter(Resource):
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@admin_token_required
 	def put(self, id):
-		data = request.json
+		data = request.form
 		dcenter = update_dcenter(id=id, data=data)
 		if not dcenter:
 			api.abort(404)
