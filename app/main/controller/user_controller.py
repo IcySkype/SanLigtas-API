@@ -54,7 +54,7 @@ class User(Resource):
 		if not user:
 			api.abort(404)
 		else:
-			return delete_user(user)
+			return delete_user(user=user)
 
 	@api.doc('update a user', parser=parser)
 	@api.response(201, 'User Succesfully Updated.')

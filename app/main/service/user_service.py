@@ -32,14 +32,13 @@ def get_all_users():
 def get_a_user(public_id):
 	return User.query.filter_by(public_id=public_id).first()
 
-def delete_user(public_id):
-	db.session.delete(public_id)
-	db.session.commit
+def delete_user(user):
+	db.session.delete(user)
+	db.session.commit()
 
 def update_user(public_id, data):
     user = User.query.filter_by(public_id=public_id).first()
     if user:
-        user.public_id = str(uuid.uuid4()),
         user.email = data['email']
         user.username = data['username']
         user.password = data['password']
@@ -49,23 +48,6 @@ def update_user(public_id, data):
             'message': 'Updated User.'
         }
         return response_object, 200
-        if User.query.filter_by(email=data['email']).count() == 0 or User.query.filter_by(email=data['email']).count() == 1 and user.email == newdata['email']:
-            user.public_name = str(uuid.uuid4()),
-            user.email = data['email'],
-            user.contact = data['contact'],
-            user.username = data['username'],
-            db.session.commit()
-            response_object = {
-                'status': 'success',
-                'message': 'user updated'
-            }
-            return response_object, 200
-        else:
-            response_object = {
-                'status': 'failed',
-                'message': 'email already used.'
-            }
-            return response_object, 409
     else:
         response_object = {
             'status': 'Failed',

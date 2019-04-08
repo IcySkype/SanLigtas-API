@@ -13,4 +13,7 @@ def create_app(config_name):
 	db.init_app(app)
 	flask_bcrypt.init_app(app)
 
+	@app.after_request
+	def after_request(response):
+		response.header.add('Access-Control-Allow-Origin', '*')
 	return app
