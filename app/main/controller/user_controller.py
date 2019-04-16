@@ -13,6 +13,7 @@ parser= UserDto.parser
 # lahi ra sya sa user mu register sa ilang selves
 @api.route('/')
 class UserList(Resource):
+	
 	@api.doc('list_of_registered_users')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
