@@ -13,6 +13,9 @@ def save_new_user(data):
 			email=data['email'],
 			username=data['username'],
 			password=data['password'],
+			role=data['role'],
+			first_name=data['first_name'],
+			last_name=data['last_name'],
 			registered_on=datetime.datetime.utcnow()
 		)
 		save_changes(new_user)
@@ -41,7 +44,6 @@ def update_user(public_id, data):
     if user:
         user.email = data['email']
         user.username = data['username']
-        user.password = data['password']
         db.session.commit()
         response_object = {
             'status': 'Success',

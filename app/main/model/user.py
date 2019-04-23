@@ -14,12 +14,14 @@ class User(db.Model):
 	#registered_on and public_id are auto-generated. Don't make them editable.
 	registered_on = db.Column(db.DateTime(), nullable=False)
 	#pls change admin attribute as 'role'
-	#role = db.Column(db.Integer(), nullable=False, default=0, min=0, max=3)
+	role = db.Column(db.Integer(), nullable=False, default=0)
 	#eg. role 0 = non admin, role 1 = social worker admin, role 2 = evac center admin, role 3 = master admin
 	#migrate+upgrade
-	admin = db.Column(db.Boolean(), nullable=False, default=False)
+	#admin = db.Column(db.Boolean(), nullable=False, default=False)
 	public_id = db.Column(db.String(100), unique=True)
 	username = db.Column(db.String(50), unique=True)
+	last_name = db.Column(db.String(50), unique=True)
+	first_name = db.Column(db.String(50), unique=True)
 	pass_hash = db.Column(db.String(100))
 
 	@property
