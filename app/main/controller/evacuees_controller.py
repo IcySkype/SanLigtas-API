@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import EvacueesDto
-from ..util.decorator import token_required
+from ..util.decorator import token_required, admin_token_required
 from ..service.evacuees_service import save_new_evacuees, get_all_evacuees, get_a_evacuee, delete_evacuees, update_evacuees
 
 api = EvacueesDto.api
@@ -22,9 +22,12 @@ class EvacueesList(Resource):
 
 	@api.response(201, 'Evacuees successfully created.')
 	@api.doc('create a new evacuees', parser=parser)
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@admin_token_required
 	def post(self):
 		#create new evacuees
 		data = request.form()
+		print (data)
 		return save_new_evacuees(data=data)
 
 @api.route('/<home_id>')

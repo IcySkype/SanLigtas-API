@@ -40,15 +40,15 @@ class EvacueesDto:
 	api = Namespace('evacuees', description='Evacuees related operations')
 	evacuees = api.model('evacuees',{
 		'name' : fields.String(required=True, description='Evacuees Name'),
-		'home_id' : fields.String(required=True, description='Evacuees home_id'),
-		'address' : fields.Integer(required=True, description='Evacuees address'),
+		'home_id' : fields.Integer(required=True, description='Evacuees home_id'),
+		'address' : fields.String(required=True, description='Evacuees address'),
 		'date_of_reg' : fields.String(required=True, description='Evacuees date of regristration'),
 		'gender' : fields.String(required=True, description='Evacuees gender'),
 		'age' : fields.Integer(required=True, description='Evacueesr age'),
 		'religion' : fields.String(required=True, description='Evacuees religion'),
 		'civil_status' : fields.String(required=True, description='Evacuees civil_status'),
-		'educ_attainment' : fields.Integer(required=True, description='Evacuees educ_attainment'),
-		'occupation' : fields.Integer(required=True, description='Evacuees occupation')
+		'educ_attainment' : fields.String(required=True, description='Evacuees educ_attainment'),
+		'occupation' : fields.String(required=True, description='Evacuees occupation')
 
 
 	})
