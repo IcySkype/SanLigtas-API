@@ -82,7 +82,9 @@ def update_evacuees(home_id, data):
 		}
 		return response_object, 409
 
-
+def save_changes(data):
+	db.session.add(data)
+	db.session.commit()
 
 # def update_evacuees(home_id, data):
 # 	evacuees = Evacuees.query.filter_by(home_id=home_id).first()

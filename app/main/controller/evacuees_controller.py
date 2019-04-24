@@ -26,7 +26,7 @@ class EvacueesList(Resource):
 	@admin_token_required
 	def post(self):
 		#create new evacuees
-		data = request.form()
+		data = request.form
 		print (data)
 		return save_new_evacuees(data=data)
 
