@@ -36,7 +36,8 @@ class DistCenterDto:
 	distcenter = api.model('distcenter',{
 		'name' : fields.String(required=True, description='Distribution Center Name'),
 		'address' : fields.String(required=True, description='Physical Address of the Distribution Center'),
-		'capacity' : fields.Integer(required=True, description='Distribution Center Capacity')
+		'capacity' : fields.Integer(required=True, description='Distribution Center Capacity'),
+		'public_id' : fields.String(description='Distribution Center Public Id')
 	})
 	parser = api.parser()
 	parser.add_argument('name', type=str, help='Distribution Center Name')
