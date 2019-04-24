@@ -23,7 +23,7 @@ class EvacueesList(Resource):
 	@api.response(201, 'Evacuees successfully created.')
 	@api.doc('create a new evacuees', parser=parser)
 	@api.header('Authorization', 'JWT TOKEN', required=True)
-	@admin_token_required
+	@token_required
 	def post(self):
 		#create new evacuees
 		data = request.form

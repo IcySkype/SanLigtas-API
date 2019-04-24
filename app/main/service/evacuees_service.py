@@ -10,8 +10,8 @@ def save_new_evacuees(data):
 		new_evacuees = Evacuees(
 			name=data['name'],
 			home_id=data['home_id'],
-			date_of_reg=data['address'],
-			address=data['name'],
+			date_of_reg=data['date_of_reg'],
+			address=data['address'],
 			gender=data['gender'],
 			age=data['age'],
 			religion=data['religion'],
