@@ -25,4 +25,4 @@ class LogoutAPI(Resource):
 	@token_required
 	def post(self):
 		auth_header = request.headers.get('Authorization')
-		return Auth.logout_user(auth_token=auth_header)
+		return Auth.logout_user(data=auth_header)

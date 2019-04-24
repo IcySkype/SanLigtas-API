@@ -6,13 +6,20 @@ class UserDto:
 	user = api.model('user', {
 		'email' : fields.String(required=True, description='User Email Address'),
 		'username' : fields.String(required=True, description='User Username'),
-		'password': fields.String(required=True, description='User Password'),
-		'public_id' : fields.String(description='User Identifier')
+		'first_name' : fields.String(description='User FirstName'),
+		'last_name' : fields.String(description='User Lastname'),
+		'pass_hash': fields.String(required=True, description='User Password'),
+		'public_id' : fields.String(description='User Identifier'),
+		'role' : fields.Integer(description='User Identifier'),
+		'registered_on' : fields.String(description='Date Registered')
 	})
 	parser = api.parser()
 	parser.add_argument('email', type=str, help='User Email Address', location='form')
+	parser.add_argument('first_name', type=str, help='User Furst Name', location='form')
+	parser.add_argument('last_name', type=str, help='User Last Name', location='form')
 	parser.add_argument('username', type=str, help='User Username', location='form')
 	parser.add_argument('password', type=str, help='User Password', location='form')
+	parser.add_argument('role', type=int, help='User Role', location='form')
 
 class AuthDto:
 	api = Namespace('auth', description='Authentication related operations')
@@ -29,7 +36,8 @@ class DistCenterDto:
 	distcenter = api.model('distcenter',{
 		'name' : fields.String(required=True, description='Distribution Center Name'),
 		'address' : fields.String(required=True, description='Physical Address of the Distribution Center'),
-		'capacity' : fields.Integer(required=True, description='Distribution Center Capacity')
+		'capacity' : fields.Integer(required=True, description='Distribution Center Capacity'),
+		'public_id' : fields.String(description='Distribution Center Public Id')
 	})
 	parser = api.parser()
 	parser.add_argument('name', type=str, help='Distribution Center Name')

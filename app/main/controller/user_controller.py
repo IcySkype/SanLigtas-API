@@ -36,7 +36,7 @@ class User(Resource):
 	@api.doc('get a user')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
-	@api.marshal_list_with(_user)
+	@api.marshal_list_with(_user, envelope='data')
 	def get(self, public_id):
 		#gets a specific user with public_id
 		user = get_a_user(public_id)
@@ -55,7 +55,7 @@ class User(Resource):
 		if not user:
 			api.abort(404)
 		else:
-			return delete_user(user)
+			return delete_user(user=user)
 
 	@api.doc('update a user', parser=parser)
 	@api.response(201, 'User Succesfully Updated.')
@@ -64,6 +64,7 @@ class User(Resource):
 	def put(self, public_id):
 		user = get_a_user(public_id)
 		data = request.form
+		print (data)
 		user = update_user(public_id, data)
 		if not user:
 			api.abort(404)
