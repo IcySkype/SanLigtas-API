@@ -5,6 +5,7 @@ from .main.controller.user_controller import api as user_ns
 from .main.controller.auth_controller import api as auth_ns
 from .main.controller.distcenter_controller import api as dcenter_ns
 from .main.controller.evacuees_controller import api as evacuee_ns
+from .main.controller.dependents_controller import api as dependents_ns
 
 blueprint = Blueprint('api', __name__)
 
@@ -18,4 +19,5 @@ api.add_namespace(user_ns, path='/user')
 api.add_namespace(auth_ns)
 api.add_namespace(dcenter_ns)
 api.add_namespace(evacuee_ns, path='/evacuees')
+api.add_namespace(dependents_ns, path='/dependents')
 
