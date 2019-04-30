@@ -25,11 +25,12 @@ def admin_token_required(f):
 		
 		data, status = AuthAdmin.get_logged_in_user(request)
 		token = data.get('data')
+		print(token)
 
 		if not token:
 			return data, status
 
-		admin = token.get('admin')
+		admin = token.get('role')
 		if not admin:
 			response_object = {
 				'status' : 'fail',

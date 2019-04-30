@@ -1,4 +1,4 @@
-
+import uuid
 import datetime
 
 from app.main import db
@@ -11,7 +11,8 @@ def save_new_dcenter(data):
 		new_dcenter = DistCenter(
 			name=data['name'],
 			address=data['address'],
-			capacity=data['capacity']
+			capacity=data['capacity'],
+			public_id=str(uuid.uuid4())
 		)
 		save_changes(new_dcenter)
 		response_object = {
@@ -30,22 +31,23 @@ def save_new_dcenter(data):
 def get_all_dcenters():
 	return DistCenter.query.all()
 
-def get_a_dcenter(id):
-	return DistCenter.query.filter_by(id=id).first()
+def get_a_dcenter(public_id):
+	return DistCenter.query.filter_by(public_id=public_id).first()
 
 
 def save_changes(data):
 	db.session.add(data)
 	db.session.commit()
 
-def update_dcenter(id, data):
-	dcenter = DistCenter.query.filter_by(id=id).first()
-	otherdcenters = DistCenter.query.filter(DistCenter.id != id).all()
+def update_dcenter(public_id, data):
+	dcenter = DistCenter.query.filter_by(public_id=public_id).first()
+	print(dcenter)
+	otherdcenters = DistCenter.query.filter(DistCenter.public_id != public_id).all()
 	if dcenter:
-		check_existing = False
+		check_existing = True
 		for x in otherdcenters:
 			if x.id == data['address']:
-				check_existing = True
+				check_existing = False
 		if check_existing:
 			dcenter.name=data['name'],
 			dcenter.address=data['address'],
@@ -57,6 +59,7 @@ def update_dcenter(id, data):
 			}
 			return response_object, 200
 		else:
+			print(data['address'])
 			response_object = {
 			'status' : 'fail',
 			'message' : 'New Address already used.'
@@ -70,8 +73,8 @@ def update_dcenter(id, data):
 		return response_object, 409
 
 
-def delete_dcenter(id):
-	dcenter = DistCenter.query.filter_by(id=id).first()
+def delete_dcenter(public_id):
+	dcenter = DistCenter.query.filter_by(public_id=public_id).first()
 	if dcenter:
 			db.session.delete(dcenter)
 			db.session.commit()
