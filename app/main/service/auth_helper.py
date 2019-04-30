@@ -104,7 +104,8 @@ class AuthMobile:
 					response_object = {
 						'status' : 'success',
 						'message' : 'Logged in successfully!',
-						'Authorization' : auth_token.decode()
+						'Authorization' : auth_token.decode(),
+						'public_id' : user.public_id
 					}
 					return response_object, 200
 			else:
@@ -122,11 +123,11 @@ class AuthMobile:
 			return response_object, 500
 
 	@staticmethod
-	def logout_user(auth_token):#data
-		#if data:
-			#auth_token = data.split(" ")[1]
-		#else:
-			#auth_token = ''
+	def logout_user(data):#data
+		if data:
+			auth_token = data.split(" ")[0]
+		else:
+			auth_token = ''
 		if auth_token:
 			resp = UserMobile.decode_auth_token(auth_token)
 			if not isinstance(resp, str):

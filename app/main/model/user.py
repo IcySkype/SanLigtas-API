@@ -110,6 +110,7 @@ class UserMobile(db.Model):
         except Exception as e:
             return e
 
+
     @staticmethod  
     def decode_auth_token(auth_token):
         try:
