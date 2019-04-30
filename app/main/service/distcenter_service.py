@@ -41,7 +41,6 @@ def save_changes(data):
 
 def update_dcenter(public_id, data):
 	dcenter = DistCenter.query.filter_by(public_id=public_id).first()
-	print(dcenter)
 	otherdcenters = DistCenter.query.filter(DistCenter.public_id != public_id).all()
 	if dcenter:
 		check_existing = True

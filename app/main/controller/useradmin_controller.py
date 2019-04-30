@@ -55,7 +55,9 @@ class User(Resource):
 		if not user:
 			api.abort(404)
 		else:
+
 			return delete_user(user)
+
 
 	@api.doc('update a user', parser=parser)
 	@api.response(201, 'User Succesfully Updated.')
@@ -64,7 +66,6 @@ class User(Resource):
 	def put(self, public_id):
 		# user = get_a_user(public_id)
 		data = request.form
-		# print(data)
 		user = update_user(public_id, data)
 		if not user:
 			api.abort(404)
