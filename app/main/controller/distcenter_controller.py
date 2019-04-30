@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import DistCenterDto
-from ..util.decorator import token_required, admin_token_required
+from ..util.decoratoradmin import token_required, admin_token_required
 from ..service.distcenter_service import save_new_dcenter, get_all_dcenters, get_a_dcenter, update_dcenter, delete_dcenter
 
 api = DistCenterDto.api
