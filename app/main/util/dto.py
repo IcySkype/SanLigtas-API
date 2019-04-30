@@ -38,7 +38,7 @@ class PasswordMobileDto:
 	api = Namespace('usermobile', description='User password operation')
 	user = api.model('usermobile', {
 		'email': fields.String(required=True, description='user email address'),
-        'password': fields.String(required=True, description='user password')
+    'password': fields.String(required=True, description='user password')
 		})
 	parser = api.parser()
 	parser.add_argument('email', type=str, help='User Email', location='form')
@@ -63,8 +63,6 @@ class UserMobileDto:
     })
 	parser = api.parser()
 	parser.add_argument('email', type=str, help='User Email Address', location='form')
-	parser.add_argument('first_name', type=str, help='User Furst Name', location='form')
-	parser.add_argument('last_name', type=str, help='User Last Name', location='form')
 	parser.add_argument('username', type=str, help='User Username', location='form')
 	parser.add_argument('password', type=str, help='User Password', location='form')
 	parser.add_argument('first_name', type=str, help='User First Name', location='form')

@@ -26,3 +26,4 @@ class LogoutAPI(Resource):
 	def post(self):
 		auth_header = request.headers.get('Authorization')
 		return AuthAdmin.logout_user(auth_token=auth_header)
+

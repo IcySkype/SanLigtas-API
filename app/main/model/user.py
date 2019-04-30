@@ -95,6 +95,7 @@ class UserMobile(db.Model):
     def __repr__(self):	
         return "<User '{}'>".format(self.username)
 
+
     def encode_auth_token(self, user_id):
         try:
             payload = {
@@ -110,7 +111,6 @@ class UserMobile(db.Model):
         except Exception as e:
             return e
 
-
     @staticmethod  
     def decode_auth_token(auth_token):
         try:
@@ -124,3 +124,4 @@ class UserMobile(db.Model):
             return 'Signature expired. Please log in again.'    
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+
