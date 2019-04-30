@@ -9,4 +9,3 @@ class DistCenter(db.Model):
 	address = db.Column(db.String(300), nullable = False, unique = True)
 	capacity = db.Column(db.Integer(), nullable = False)
 	public_id = db.Column(db.String(300), nullable = False)
-	#img = db.Column(db.String())
