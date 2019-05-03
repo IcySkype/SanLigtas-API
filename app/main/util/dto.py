@@ -67,7 +67,8 @@ class DependentsDto:
 	api = Namespace('dependents', description='Dependents related operations')
 	dependents = api.model('dependents',{
 		'name' : fields.String(required=True, description='Dependents Name'),
-		'dependents_id' : fields.Integer(required=True, description='Dependents dependents_id'),
+		'dependents_id' : fields.Integer(required=True, description='dependents_id'),
+		'dependents_homeID' : fields.Integer(required=True, description='Dependents home ID'),
 		'address' : fields.String(required=True, description='Dependents address'),
 		'gender' : fields.String(required=True, description='Dependents gender'),
 		'age' : fields.Integer(required=True, description='Dependents age'),
@@ -78,7 +79,8 @@ class DependentsDto:
 	})
 	parser = api.parser()
 	parser.add_argument('name', type=str, help='Dependents Name')
-	parser.add_argument('home_id', type=int, help='Dependents home_id')
+	parser.add_argument('dependents_id', type=int, help='Dependents id')
+	parser.add_argument('dependents_homeID', type=int, help='Dependents home id')
 	parser.add_argument('address', type=str, help='Dependents address')
 	parser.add_argument('gender', type=str, help='Dependents gender')
 	parser.add_argument('age', type=int, help='Dependents age')

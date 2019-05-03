@@ -9,8 +9,8 @@ def save_new_dependents(data):
 	if not dependents:
 		new_dependents = Dependents(
 			name=data['name'],
-			home_id=data['home_id'],
 			dependents_id=data['dependents_id'],
+			dependents_homeID = Evacuees.query.filter_by(home_id=data['home_id']),
 			address=data['address'],
 			gender=data['gender'],
 			age=data['age'],
