@@ -31,10 +31,9 @@ def save_new_user(data):
 
 
 def update_password(public_id, data):
-    user = UserAdmin.query.filter_by(email=data['email']).first()
+    user = UserAdmin.query.filter_by(public_id=public_id).first()
     if user:
         user.password = data['password']
-
         db.session.commit()
         response_object = {
             'status': 'Success',
@@ -63,18 +62,12 @@ def delete_user(public_id):
 def update_user(public_id, data):
     # user = UserAdmin.query.filter_by(public_id=public_id).first()
     user = db.session.query(UserAdmin).filter_by(public_id=public_id).first()
-    print("charot")
     if user:
-        # user.public_id = str(uuid.uuid4()),
-        user.email = data['email']
         user.username = data['username']
-        # user.password = data['password']
         user.first_name = data['first_name']
-        print(data['first_name'])
         user.last_name = data['last_name']
         user.role = data['role']
         user.gender = data['gender']
-        print("mao ni siya")
 
         db.session.commit()
         response_object = {
@@ -82,29 +75,6 @@ def update_user(public_id, data):
             'message': 'Updated User.'
         }
         return response_object, 200
-
-        if UserAdmin.query.filter_by(email=data['email']).count() == 0 or User.query.filter_by(email=data['email']).count() == 1 and user.email == newdata['email']:
-            # user.public_name = str(uuid.uuid4()),
-            user.email = data['email'],
-            user.role = data['role'],
-            user.username = data['username'],
-            user.first_name = data['first_name'],
-            user.last_name = data['last_name'],
-            # user.password = data['password'],
-            user.gender = data['gender']
-            print("ikaduha")
-            db.session.commit()
-            response_object = {
-                'status': 'success',
-                'message': 'user updated'
-            }
-            return response_object, 200
-        else:
-            response_object = {
-                'status': 'failed',
-                'message': 'email already used.'
-            }
-            return response_object, 409
     else:
         response_object = {
             'status': 'Failed',

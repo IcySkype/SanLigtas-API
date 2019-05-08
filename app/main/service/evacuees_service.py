@@ -10,7 +10,7 @@ def save_new_evacuees(data):
 		new_evacuees = Evacuees(
 			name=data['name'],
 			home_id=data['home_id'],
-			date_of_reg=data['date_of_reg'],
+			date_of_reg=datetime.datetime.utcnow(),
 			address=data['address'],
 			gender=data['gender'],
 			age=data['age'],
@@ -19,6 +19,7 @@ def save_new_evacuees(data):
 			educ_attainment=data['educ_attainment'],
 			occupation=data['occupation']
 		)
+		print (new_evacuees) 
 		save_changes(new_evacuees)
 		response_object = {
 			'status' : 'success',
@@ -37,7 +38,7 @@ def get_all_evacuees():
 	return Evacuees.query.all()
 
 
-def get_a_evacuee(id):
+def get_a_evacuee(home_id):
 	return Evacuees.query.filter_by(home_id=home_id).first()
 
 def delete_evacuees(home_id):
@@ -45,8 +46,9 @@ def delete_evacuees(home_id):
 	db.session.commit
 
 def update_evacuees(home_id, data):
-	evacuees = Evacuees.query.filter_by(home_id=id).first()
-	otherEvacuees = Evacuees.query.filter(Evacuees.id != id).all()
+	print(home_id)
+	evacuees = Evacuees.query.filter_by(home_id=home_id).first()
+	otherEvacuees = Evacuees.query.filter(Evacuees.id != home_id).all()
 	if evacuees:
 		check_existing = False
 		for x in otherEvacuees:

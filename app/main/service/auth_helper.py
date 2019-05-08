@@ -9,6 +9,14 @@ class AuthAdmin:
 			#fetch user data
 			user = UserAdmin.query.filter_by(email=data.get('email')).first()
 			if user and user.check_password(data.get('password')):
+				role = str(data.get('role'))
+				isAdmin = "admin" in role
+				if not isAdmin:
+					response_object = {
+						'status' : 'fail',
+						'message' : 'User not an admin'
+					}
+					return response_object, 401
 				auth_token = user.encode_auth_token(user.id)
 				username = user.username
 				first_name = user.first_name
