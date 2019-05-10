@@ -1,6 +1,6 @@
 import os
-
-postgres_local_base = 'postgresql://postgres:123samsamsam@localhost:5432/restplusII'
+postgres_local_base = 'postgres://ewxybuxwluzggk:d0df279a43db226dd3b8b9a8bade3e6e68c0700d21b3f953fa00a182dc6936eb@ec2-54-235-208-103.compute-1.amazonaws.com:5432/d8from30f48hfj'
+#postgres_local_base = 'postgresql://postgres:123samsamsam@localhost:5432/restplusII'
 #os.environ['DATABASE_URL']
 
 basedir = os.path.abspath(os.path.dirname(__file__))
