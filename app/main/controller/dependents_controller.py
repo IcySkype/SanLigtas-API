@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import DependentsDto
-from ..util.decorator import token_required, admin_token_required
+from ..util.decoratoradmin import token_required, admin_token_required
 from ..service.dependents_service import save_new_dependents, get_all_dependents, get_a_dependents, delete_dependents, update_dependents
 
 api = DependentsDto.api
