@@ -42,13 +42,26 @@ def get_a_evacuee(home_id):
 	return Evacuees.query.filter_by(home_id=home_id).first()
 
 def delete_evacuees(home_id):
-	db.session.delete(home_id)
-	db.session.commit
+	evacuees = Evacuees.query.filter_by(home_id=home_id).first()
+	if evacuees:
+			db.session.delete(evacuees)
+			db.session.commit()
+			response_object = {
+			'status' : 'success',
+			'message' : 'evacuees deleted'
+			}
+			return response_object, 204
+	else:
+		response_object = {
+			'status' : 'fail',
+			'message' : 'No matching evacuees found.'
+		}
+		return response_object, 409
 
 def update_evacuees(home_id, data):
-	print(home_id)
+
 	evacuees = Evacuees.query.filter_by(home_id=home_id).first()
-	otherEvacuees = Evacuees.query.filter(Evacuees.id != home_id).all()
+	otherEvacuees = Evacuees.query.filter(Evacuees.home_id != home_id).all()
 	if evacuees:
 		check_existing = False
 		for x in otherEvacuees:

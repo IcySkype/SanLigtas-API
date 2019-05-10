@@ -113,7 +113,6 @@ class EvacueesDto:
 		'name' : fields.String(required=True, description='Evacuees Name'),
 		'home_id' : fields.Integer(required=True, description='Evacuees home_id'),
 		'address' : fields.String(required=True, description='Evacuees address'),
-		'date_of_reg' : fields.String(required=True, description='Evacuees date of regristration'),
 		'gender' : fields.String(required=True, description='Evacuees gender'),
 		'age' : fields.Integer(required=True, description='Evacueesr age'),
 		'religion' : fields.String(required=True, description='Evacuees religion'),
@@ -127,10 +126,34 @@ class EvacueesDto:
 	parser.add_argument('name', type=str, help='Evacuees Name')
 	parser.add_argument('home_id', type=int, help='Evacuees home_id')
 	parser.add_argument('address', type=str, help='Evacuees address')
-	parser.add_argument('date_of_reg', type=str, help='Evacuees date of regristration')
 	parser.add_argument('gender', type=str, help='Evacuees gender')
 	parser.add_argument('age', type=int, help='Evacuees age')
 	parser.add_argument('religion', type=str, help='Evacuees religion')
 	parser.add_argument('civil_status', type=str, help='Evacuees civil_status')
 	parser.add_argument('educ_attainment', type=str, help='Evacuees educ_attainment')
-	parser.add_argument('occupation', type=str, help='Evacuees occupation')	
+	parser.add_argument('occupation', type=str, help='Evacuees occupation')
+
+
+class DependentsDto:
+	api = Namespace('dependents', description='Dependents related operations')
+	dependents = api.model('dependents',{
+		'name' : fields.String(required=True, description='Dependents Name'),
+		'dependents_id' : fields.Integer(required=True, description='dependents_id'),
+		'dependents_homeID' : fields.Integer(required=True, description='Dependents home ID'),
+		'address' : fields.String(required=True, description='Dependents address'),
+		'gender' : fields.String(required=True, description='Dependents gender'),
+		'age' : fields.Integer(required=True, description='Dependents age'),
+		'educ_attainment' : fields.String(required=True, description='Dependents educ_attainment'),
+		'occupation' : fields.String(required=True, description='Dependents occupation')
+
+
+	})
+	parser = api.parser()
+	parser.add_argument('name', type=str, help='Dependents Name')
+	parser.add_argument('dependents_id', type=int, help='Dependents id')
+	parser.add_argument('dependents_homeID', type=int, help='Dependents home id')
+	parser.add_argument('address', type=str, help='Dependents address')
+	parser.add_argument('gender', type=str, help='Dependents gender')
+	parser.add_argument('age', type=int, help='Dependents age')
+	parser.add_argument('educ_attainment', type=str, help='Dependents educ_attainment')
+	parser.add_argument('occupation', type=str, help='Dependents occupation')

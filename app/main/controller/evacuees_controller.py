@@ -40,32 +40,30 @@ class Evacuees(Resource):
 	@api.marshal_list_with(_evacuees)
 	def get(self, home_id):
 		#gets a specific user with public_id
-		user = get_a_evacuee(home_id)
+		evacuees = get_a_evacuee(home_id)
 		if not evacuees:
 			api.abort(404)
 		else:
 			return evacuees
 	
-	@api.doc('delete a evacuees')
-	@api.response(204, 'Evacuees Succesfully Deleted.')
+	@api.doc('delete an evacuees')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	def delete(self, home_id):
-		#delete a specific user with public_id
-		user = get_a_evacuee(home_id)
+		evacuees = get_a_evacuee(home_id)
 		if not evacuees:
 			api.abort(404)
 		else:
-			return delete_evacuees(evacuees)
+			return evacuees
 
 	@api.doc('update a evacuees', parser=parser)
 	@api.response(201, 'evacuees Succesfully Updated.')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	def put(self, home_id):
-		user = get_a_evacuee(home_id)
+		evacuees = get_a_evacuee(home_id)
 		data = request.form
-		user = update_evacuees(home_id, data)
+		evacuees = update_evacuees(home_id, data)
 		if not evacuees:
 			api.abort(404)
 		else:
