@@ -19,6 +19,7 @@ def save_new_evacuees(data):
 			educ_attainment=data['educ_attainment'],
 			occupation=data['occupation']
 		)
+		print (new_evacuees) 
 		save_changes(new_evacuees)
 		response_object = {
 			'status' : 'success',
@@ -58,6 +59,7 @@ def delete_evacuees(home_id):
 		return response_object, 409
 
 def update_evacuees(home_id, data):
+
 	evacuees = Evacuees.query.filter_by(home_id=home_id).first()
 	otherEvacuees = Evacuees.query.filter(Evacuees.home_id != home_id).all()
 	if evacuees:

@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import EvacueesDto
-from ..util.decorator import token_required, admin_token_required
+from ..util.decoratoradmin import token_required, admin_token_required
 from ..service.evacuees_service import save_new_evacuees, get_all_evacuees, get_a_evacuee, delete_evacuees, update_evacuees
 
 api = EvacueesDto.api
