@@ -29,8 +29,9 @@ def admin_token_required(f):
 
 		if not token:
 			return data, status
-
+		
 		admin = token.get('role')
+		print (admin)
 		if not admin:
 			response_object = {
 				'status' : 'fail',

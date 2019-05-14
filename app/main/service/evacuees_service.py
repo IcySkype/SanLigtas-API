@@ -65,13 +65,11 @@ def update_evacuees(home_id, data):
 	if evacuees:
 		check_existing = False
 		for x in otherEvacuees:
-			if x.id == data['address']:
+			if x.home_id == data['address']:
 				check_existing = True
-		if check_existing:
+		if not check_existing:
 			evacuees.name = data['name']
 			evacuees.address = data['address'],
-			evacuees.home_id = data['home_id'],
-			evacuees.date_of_reg = data['date_of_reg'],
 			evacuees.gender = data['gender'],
 			evacuees.age = data['age'],
 			evacuees.religion = data['religion'],
@@ -145,3 +143,15 @@ def delete_evacuees(home_id):
 			'message' : 'evacuee does not exist'
 		}
 		return response_object, 409
+		
+def search_by_name(search_term):
+	results = Evacuees.query.filter(Evacuees.name.match('%'+search_term+'%')).all()
+	return results
+
+def search_by_address(search_term):
+	results = Evacuees.query.filter(Evacuees.address.match('%'+search_term+'%')).all()
+	return results
+
+def search_by_home_id(search_term):
+	results = Evacuees.query.filter(Evacuees.home_id.match('%'+search_term+'%')).all()
+	return results

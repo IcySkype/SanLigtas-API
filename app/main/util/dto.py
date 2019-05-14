@@ -21,6 +21,7 @@ class UserAdminDto:
 	parser.add_argument('last_name', type=str, help='User Last Name', location='form')
 	parser.add_argument('role', type=str, help='User Role', location='form')
 	parser.add_argument('gender', type=str, help='User Gender', location='form')
+	parser.add_argument('Authorization', type=str, help='Auth', location='headers')
 	
 
 class PasswordAdminDto:
@@ -71,6 +72,7 @@ class UserMobileDto:
 	parser.add_argument('gender', type=str, help='User Gender', location='form')
 	parser.add_argument('contact_number', type=str, help='User Contact Number', location='form')
 	parser.add_argument('address', type=str, help='User Address', location='form')
+	parser.add_argument('Authorization', type=str, help='Auth', location='headers')
 
 class AuthAdminDto:
 	api = Namespace('authadmin', description='Authentication related operations')
@@ -103,9 +105,10 @@ class DistCenterDto:
 		'public_id' : fields.String(description='Distribution Center Public Id')
 	})
 	parser = api.parser()
-	parser.add_argument('name', type=str, help='Distribution Center Name')
-	parser.add_argument('address', type=str, help='Physical Address of the Distribution Center')
-	parser.add_argument('capacity', type=int, help='Distribution Center Capacity')
+	parser.add_argument('name', type=str, help='Distribution Center Name', location='form')
+	parser.add_argument('address', type=str, help='Physical Address of the Distribution Center', location='form')
+	parser.add_argument('capacity', type=int, help='Distribution Center Capacity', location='form')
+	parser.add_argument('Authorization', type=str, help='Auth', location='headers')
 
 class EvacueesDto:
 	api = Namespace('evacuees', description='Evacuees related operations')
@@ -123,15 +126,16 @@ class EvacueesDto:
 
 	})
 	parser = api.parser()
-	parser.add_argument('name', type=str, help='Evacuees Name')
-	parser.add_argument('home_id', type=int, help='Evacuees home_id')
-	parser.add_argument('address', type=str, help='Evacuees address')
-	parser.add_argument('gender', type=str, help='Evacuees gender')
-	parser.add_argument('age', type=int, help='Evacuees age')
-	parser.add_argument('religion', type=str, help='Evacuees religion')
-	parser.add_argument('civil_status', type=str, help='Evacuees civil_status')
-	parser.add_argument('educ_attainment', type=str, help='Evacuees educ_attainment')
-	parser.add_argument('occupation', type=str, help='Evacuees occupation')
+	parser.add_argument('name', type=str, help='Evacuees Name', location='form')
+	parser.add_argument('home_id', type=int, help='Evacuees home_id', location='form')
+	parser.add_argument('address', type=str, help='Evacuees address', location='form')
+	parser.add_argument('gender', type=str, help='Evacuees gender', location='form')
+	parser.add_argument('age', type=int, help='Evacuees age', location='form')
+	parser.add_argument('religion', type=str, help='Evacuees religion', location='form')
+	parser.add_argument('civil_status', type=str, help='Evacuees civil_status', location='form')
+	parser.add_argument('educ_attainment', type=str, help='Evacuees educ_attainment', location='form')
+	parser.add_argument('occupation', type=str, help='Evacuees occupation', location='form')
+	parser.add_argument('Authorization', location='headers')
 
 
 class DependentsDto:
@@ -149,11 +153,12 @@ class DependentsDto:
 
 	})
 	parser = api.parser()
-	parser.add_argument('name', type=str, help='Dependents Name')
-	parser.add_argument('dependents_id', type=int, help='Dependents id')
-	parser.add_argument('dependents_homeID', type=int, help='Dependents home id')
-	parser.add_argument('address', type=str, help='Dependents address')
-	parser.add_argument('gender', type=str, help='Dependents gender')
-	parser.add_argument('age', type=int, help='Dependents age')
-	parser.add_argument('educ_attainment', type=str, help='Dependents educ_attainment')
-	parser.add_argument('occupation', type=str, help='Dependents occupation')
+	parser.add_argument('name', type=str, help='Dependents Name', location='form')
+	parser.add_argument('dependents_id', type=int, help='Dependents id', location='form')
+	parser.add_argument('dependents_homeID', type=int, help='Dependents home id', location='form')
+	parser.add_argument('address', type=str, help='Dependents address', location='form')
+	parser.add_argument('gender', type=str, help='Dependents gender', location='form')
+	parser.add_argument('age', type=int, help='Dependents age', location='form')
+	parser.add_argument('educ_attainment', type=str, help='Dependents educ_attainment', location='form')
+	parser.add_argument('occupation', type=str, help='Dependents occupation', location='form')
+	parser.add_argument('Authorization', type=str, help='Auth', location='headers')

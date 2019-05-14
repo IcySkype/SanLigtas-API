@@ -65,3 +65,30 @@ class DistCenter(Resource):
 			api.abort(404)
 		else:
 			return dcenter
+			
+@api.route('/search/<searchterm_name>')			
+class SearchByName(Resource):
+	@api.doc('search by name')
+	@api.response(200, 'Results found.')
+	@api.marshal_list_with(_dcenter, envelope='data')
+	def get(self, searchterm_name):
+		results = search_by_name(searchterm_dcenter)
+		return results
+
+@api.route('/search/<searchterm_address>')			
+class SearchByAddress(Resource):		
+	@api.doc('search by address')
+	@api.response(200, 'Results found.')
+	@api.marshal_list_with(_dcenter, envelope='data')
+	def get(self, searchterm_address):
+		results = search_by_fullname(searchterm_address)
+		return results
+
+@api.route('/search/<searchterm_id>')			
+class SearchByPublicId(Resource):
+	@api.doc('search by public id')
+	@api.response(200, 'Results found.')
+	@api.marshal_list_with(_dcenter, envelope='data')
+	def get(self, searchterm_id):
+		results = search_by_public_id(searchterm_id)
+		return results
