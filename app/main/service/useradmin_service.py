@@ -85,17 +85,21 @@ def update_user(public_id, data):
         return response_object, 409
 
 def search_by_username(search_term):
-	results = UserAdmin.query.filter(UserAdmin.username.match('%'+search_term+'%')).all()
+	results = UserAdmin.query.filter(UserAdmin.username.ilike('%'+search_term+'%')).all()
 	return results
 
 def search_by_fullname(search_term):
-	result1 = UserAdmin.query.filter(UserAdmin.first_name.match('%'+search_term+'%')).all()
-	result2 = UserAdmin.query.filter(UserAdmin.last_name.match('%'+search_term+'%')).all()
+	result1 = UserAdmin.query.filter(UserAdmin.first_name.ilike('%'+search_term+'%')).all()
+	result2 = UserAdmin.query.filter(UserAdmin.last_name.ilike('%'+search_term+'%')).all()
 	results = result1 + result2
 	return results
 
 def search_by_public_id(search_term):
-	results = UserAdmin.query.filter(UserAdmin.public_id.match('%'+search_term+'%')).all()
+	results = UserAdmin.query.filter(UserAdmin.public_id.ilike('%'+search_term+'%')).all()
+	return results
+	
+def search_by_role(search_term):
+	results = UserAdmin.query.filter(UserAdmin.role.ilike('%'+search_term+'%')).all()
 	return results
 
 

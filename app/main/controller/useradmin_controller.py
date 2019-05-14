@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from ..util.dto import UserAdminDto, PasswordAdminDto
 from ..util.decoratoradmin import token_required
-from ..service.useradmin_service import save_new_user, get_all_users, get_a_user, delete_user, update_user, update_password, search_by_username, search_by_fullname, search_by_public_id
+from ..service.useradmin_service import save_new_user, get_all_users, get_a_user, delete_user, update_user, update_password, search_by_username, search_by_fullname, search_by_public_id, search_by_role
 
 api = UserAdminDto.api
 _user = UserAdminDto.user
@@ -90,7 +90,7 @@ class UserPassword(Resource):
 		else:
 			return user
 			
-@api.route('/search/<searchterm_user>')			
+@api.route('/search/by_username/<searchterm_user>')			
 class SearchByUsername(Resource):
 	@api.doc('search by username')
 	@api.response(200, 'Results found.')
@@ -99,7 +99,7 @@ class SearchByUsername(Resource):
 		results = search_by_username(searchterm_user)
 		return results
 
-@api.route('/search/<searchterm_name>')			
+@api.route('/search/by_name/<searchterm_name>')			
 class SearchByName(Resource):		
 	@api.doc('search by name')
 	@api.response(200, 'Results found.')
@@ -108,7 +108,7 @@ class SearchByName(Resource):
 		results = search_by_fullname(searchterm_name)
 		return results
 
-@api.route('/search/<searchterm_id>')			
+@api.route('/search/by_id/<searchterm_id>')			
 class SearchByPublicId(Resource):
 	@api.doc('search by public id')
 	@api.response(200, 'Results found.')
@@ -116,3 +116,14 @@ class SearchByPublicId(Resource):
 	def get(self, searchterm_id):
 		results = search_by_public_id(searchterm_id)
 		return results
+		
+@api.route('/search/by_role/<searchterm_role>')			
+class SearchByRole(Resource):
+	@api.doc('search by admin role')
+	@api.response(200, 'Results found.')
+	@api.marshal_list_with(_user, envelope='data')
+	def get(self, searchterm_role):
+		results = search_by_role(searchterm_role)
+		return results
+#Search 'Main Admin' to search for main admins, 'relief admin' for relief admins, 'social worker admin' for socil worker admins
+#All search functions are case insensitive. you can search for 'Main' or 'maiN' or 'MaIn', same result.
