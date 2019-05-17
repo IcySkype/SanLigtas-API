@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from ..util.dto import DistCenterDto
 from ..util.decoratoradmin import token_required, admin_token_required
-from ..service.distcenter_service import save_new_dcenter, get_all_dcenters, get_a_dcenter, update_dcenter, delete_dcenter
+from ..service.distcenter_service import save_new_dcenter, get_all_dcenters, get_a_dcenter, update_dcenter, delete_dcenter, search_center
 
 api = DistCenterDto.api
 _dcenter = DistCenterDto.distcenter
@@ -66,29 +66,15 @@ class DistCenter(Resource):
 		else:
 			return dcenter
 			
-@api.route('/search/<searchterm_name>')			
+
+
+			
+@api.route('/search/<searchterm>')			
 class SearchByName(Resource):
-	@api.doc('search by name')
+	@api.doc('search by name, address or public_id')
 	@api.response(200, 'Results found.')
 	@api.marshal_list_with(_dcenter, envelope='data')
-	def get(self, searchterm_name):
-		results = search_by_name(searchterm_dcenter)
-		return results
-
-@api.route('/search/<searchterm_address>')			
-class SearchByAddress(Resource):		
-	@api.doc('search by address')
-	@api.response(200, 'Results found.')
-	@api.marshal_list_with(_dcenter, envelope='data')
-	def get(self, searchterm_address):
-		results = search_by_fullname(searchterm_address)
-		return results
-
-@api.route('/search/<searchterm_id>')			
-class SearchByPublicId(Resource):
-	@api.doc('search by public id')
-	@api.response(200, 'Results found.')
-	@api.marshal_list_with(_dcenter, envelope='data')
-	def get(self, searchterm_id):
-		results = search_by_public_id(searchterm_id)
+	def get(self, searchterm):
+		print(searchterm)
+		results = search_center(searchterm)
 		return results

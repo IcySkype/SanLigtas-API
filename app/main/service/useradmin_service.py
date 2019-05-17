@@ -33,7 +33,7 @@ def save_new_user(data):
 def update_password(public_id, data):
     user = UserAdmin.query.filter_by(public_id=public_id).first()
     if user:
-        user.password = data['password']
+        user.password = data['new_pass']
         db.session.commit()
         response_object = {
             'status': 'Success',
@@ -84,19 +84,10 @@ def update_user(public_id, data):
         }
         return response_object, 409
 
-def search_by_username(search_term):
-	results = UserAdmin.query.filter(UserAdmin.username.match('%'+search_term+'%')).all()
-	return results
 
-def search_by_fullname(search_term):
-	result1 = UserAdmin.query.filter(UserAdmin.first_name.match('%'+search_term+'%')).all()
-	result2 = UserAdmin.query.filter(UserAdmin.last_name.match('%'+search_term+'%')).all()
-	results = result1 + result2
-	return results
-
-def search_by_public_id(search_term):
-	results = UserAdmin.query.filter(UserAdmin.public_id.match('%'+search_term+'%')).all()
-	return results
+def search_by_user(search_term):
+    results = UserAdmin.query.filter(((UserAdmin.username.like("%"+search_term+"%")) | (UserAdmin.gender.like("%"+search_term+"%")) | (UserAdmin.role.like("%"+search_term+"%")) | (UserAdmin.public_id.like("%"+search_term+"%")) | (UserAdmin.first_name.like("%"+search_term+"%")) | (UserAdmin.last_name.like("%"+search_term+"%")))).all()
+    return results
 
 
 def save_changes(data):
