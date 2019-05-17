@@ -10,8 +10,8 @@ class AuthAdmin:
 			user = UserAdmin.query.filter_by(email=data.get('email')).first()
 
 			if user and user.check_password(data.get('password')):
-				role = user.role.lower()
-				isAdmin = "admin" in role
+				role = user.role
+				isAdmin = "Admin" in role
 				if not isAdmin:
 					response_object = {
 						'status' : 'fail',
@@ -29,7 +29,8 @@ class AuthAdmin:
 						'Authorization' : auth_token.decode(),
 						'first_name': first_name,
 						'last_name' : last_name,
-						'username' : username
+						'username' : username, 
+						'role': role
 					}
 					return response_object, 200
 			else:

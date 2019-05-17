@@ -89,14 +89,8 @@ def delete_dcenter(public_id):
 		}
 		return response_object, 409
 		
-def search_by_name(search_term):
-	results = DistCenter.query.filter(DistCenter.name.match('%'+search_term+'%')).all()
-	return results
 
-def search_by_address(search_term):
-	results = DistCenter.query.filter(DistCenter.address.match('%'+search_term+'%')).all()
-	return results
 
-def search_by_public_id(search_term):
-	results = DistCenter.query.filter(DistCenter.public_id.match('%'+search_term+'%')).all()
-	return results
+def search_center(search_term):
+	results = DistCenter.query.filter(((DistCenter.name.like("%"+search_term+"%")) | (DistCenter.address.like("%"+search_term+"%")) | (DistCenter.public_id.like("%"+search_term+"%")))).all()
+	print(results)
