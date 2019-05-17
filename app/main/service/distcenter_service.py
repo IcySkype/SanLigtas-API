@@ -94,3 +94,4 @@ def delete_dcenter(public_id):
 def search_center(search_term):
 	results = DistCenter.query.filter(((DistCenter.name.like("%"+search_term+"%")) | (DistCenter.address.like("%"+search_term+"%")) | (DistCenter.public_id.like("%"+search_term+"%")))).all()
 	print(results)
+	return results
