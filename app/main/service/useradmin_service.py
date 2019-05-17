@@ -84,10 +84,30 @@ def update_user(public_id, data):
         }
         return response_object, 409
 
+<<<<<<< HEAD
 
 def search_by_user(search_term):
     results = UserAdmin.query.filter(((UserAdmin.username.like("%"+search_term+"%")) | (UserAdmin.gender.like("%"+search_term+"%")) | (UserAdmin.role.like("%"+search_term+"%")) | (UserAdmin.public_id.like("%"+search_term+"%")) | (UserAdmin.first_name.like("%"+search_term+"%")) | (UserAdmin.last_name.like("%"+search_term+"%")))).all()
     return results
+=======
+def search_by_username(search_term):
+	results = UserAdmin.query.filter(UserAdmin.username.ilike('%'+search_term+'%')).all()
+	return results
+
+def search_by_fullname(search_term):
+	result1 = UserAdmin.query.filter(UserAdmin.first_name.ilike('%'+search_term+'%')).all()
+	result2 = UserAdmin.query.filter(UserAdmin.last_name.ilike('%'+search_term+'%')).all()
+	results = result1 + result2
+	return results
+
+def search_by_public_id(search_term):
+	results = UserAdmin.query.filter(UserAdmin.public_id.ilike('%'+search_term+'%')).all()
+	return results
+	
+def search_by_role(search_term):
+	results = UserAdmin.query.filter(UserAdmin.role.ilike('%'+search_term+'%')).all()
+	return results
+>>>>>>> a4a50f6df42b7c12e2eac01c26aadccccbb04cc3
 
 
 def save_changes(data):

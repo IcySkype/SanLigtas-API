@@ -70,7 +70,7 @@ class Evacuees(Resource):
 			return evacuees
 			
 			
-@api.route('/search/<searchterm_name>')			
+@api.route('/search/by_name/<searchterm_name>')			
 class SearchByName(Resource):
 	@api.doc('search by name')
 	@api.response(200, 'Results found.')
@@ -79,7 +79,7 @@ class SearchByName(Resource):
 		results = search_by_name(searchterm_evacuees)
 		return results
 
-@api.route('/search/<searchterm_address>')			
+@api.route('/search/by_address/<searchterm_address>')			
 class SearchByAddress(Resource):		
 	@api.doc('search by address')
 	@api.response(200, 'Results found.')
@@ -88,7 +88,7 @@ class SearchByAddress(Resource):
 		results = search_by_fullname(searchterm_address)
 		return results
 
-@api.route('/search/<searchterm_id>')			
+@api.route('/search/by_id/<searchterm_id>')			
 class SearchByPublicId(Resource):
 	@api.doc('search by home id')
 	@api.response(200, 'Results found.')

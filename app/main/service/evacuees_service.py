@@ -145,13 +145,13 @@ def delete_evacuees(home_id):
 		return response_object, 409
 		
 def search_by_name(search_term):
-	results = Evacuees.query.filter(Evacuees.name.match('%'+search_term+'%')).all()
+	results = Evacuees.query.filter(Evacuees.name.ilike('%'+search_term+'%')).all()
 	return results
 
 def search_by_address(search_term):
-	results = Evacuees.query.filter(Evacuees.address.match('%'+search_term+'%')).all()
+	results = Evacuees.query.filter(Evacuees.address.ilike('%'+search_term+'%')).all()
 	return results
 
 def search_by_home_id(search_term):
-	results = Evacuees.query.filter(Evacuees.home_id.match('%'+search_term+'%')).all()
+	results = Evacuees.query.filter(Evacuees.home_id.ilike('%'+search_term+'%')).all()
 	return results
