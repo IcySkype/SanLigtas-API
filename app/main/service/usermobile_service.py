@@ -81,6 +81,19 @@ def update_user(public_id, data):
         }
         return response_object, 409
 
+def search_by_username(search_term):
+	results = UserMobile.query.filter(UserMobile.username.ilike('%'+search_term+'%')).all()
+	return results
+
+def search_by_fullname(search_term):
+	result1 = UserMobile.query.filter(UserMobile.first_name.ilike('%'+search_term+'%')).all()
+	result2 = UserMobile.query.filter(UserMobile.last_name.ilike('%'+search_term+'%')).all()
+	results = result1 + result2
+	return results
+
+def search_by_public_id(search_term):
+	results = UserMobile.query.filter(UserMobile.public_id.ilike('%'+search_term+'%')).all()
+	return results
 
 def save_changes(data):
 	db.session.add(data)

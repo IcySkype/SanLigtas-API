@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from ..util.dto import UserAdminDto, PasswordAdminDto
 from ..util.decoratoradmin import token_required
-from ..service.useradmin_service import save_new_user, get_all_users, get_a_user, delete_user, update_user, update_password
+from ..service.useradmin_service import save_new_user, get_all_users, get_a_user, delete_user, update_user, update_password, search_by_user
 
 api = UserAdminDto.api
 _user = UserAdminDto.user
@@ -89,3 +89,15 @@ class UserPassword(Resource):
 			api.abort(404)
 		else:
 			return user
+
+
+
+@api.route('/search/<search_user>')			
+class SearchByUsername(Resource):
+	@api.doc('search by username, name, public_id, role')
+	@api.response(200, 'Results found.')
+	@api.marshal_list_with(_user, envelope='data')
+	def get(self, search_user):
+		results = search_by_user(search_user)
+		return results
+

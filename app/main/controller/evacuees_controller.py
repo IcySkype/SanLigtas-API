@@ -1,13 +1,14 @@
 from flask import request
 from flask_restplus import Resource
 
-from ..util.dto import EvacueesDto
+from ..util.dto import EvacueesDto, AssignedEvacueeDto
 from ..util.decoratoradmin import token_required, admin_token_required
-from ..service.evacuees_service import save_new_evacuees, get_all_evacuees, get_a_evacuee, delete_evacuees, update_evacuees
+from ..service.evacuees_service import save_new_evacuees, get_all_evacuees, get_a_evacuee, delete_evacuees, update_evacuees, add_evacuee, search_evacuee
 
 api = EvacueesDto.api
 _evacuees = EvacueesDto.evacuees
 parser= EvacueesDto.parser
+parser2 = AssignedEvacueeDto.parser
 
 
 @api.route('/')
@@ -30,6 +31,23 @@ class EvacueesList(Resource):
 		print (data)
 		return save_new_evacuees(data=data)
 
+
+
+
+@api.route('/assign/evacuee')			
+class AssignEvacuee(Resource):
+	@api.doc('Assign an evacuee in a center', parser=parser2)
+	@api.response(201, 'Evacuee successfully assigned.')
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@admin_token_required
+	def put(self):
+		data = request.form
+		return add_evacuee(data=data)
+
+
+
+
+
 @api.route('/<home_id>')
 @api.param('home_id', 'The Evacuee identifier')
 @api.response(404, 'Evacuee not found.')
@@ -50,7 +68,7 @@ class Evacuees(Resource):
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	def delete(self, home_id):
-		evacuees = get_a_evacuee(home_id)
+		evacuees = delete_evacuees(home_id)
 		if not evacuees:
 			api.abort(404)
 		else:
@@ -61,10 +79,24 @@ class Evacuees(Resource):
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	def put(self, home_id):
-		evacuees = get_a_evacuee(home_id)
 		data = request.form
 		evacuees = update_evacuees(home_id, data)
 		if not evacuees:
 			api.abort(404)
 		else:
 			return evacuees
+
+
+
+@api.route('/search/<search_term>')			
+class SearchByUsername(Resource):
+	@api.doc('search by Name, Address, Gender')
+	@api.response(200, 'Results found.')
+	@api.marshal_list_with(_evacuees, envelope='data')
+	def get(self, search_term):
+		results = search_evacuee(search_term)
+		return results
+
+
+			
+			

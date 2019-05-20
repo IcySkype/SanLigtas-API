@@ -4,6 +4,33 @@ from app.main import db
 from app.main.model.evacuees import Evacuees
 
 
+
+
+def add_evacuee(data):
+	print(data)
+	evacuee = Evacuees.query.filter((Evacuees.home_id == data["home_id"]) & (Evacuees.center_id == data["center_id"])).first()
+
+	if not evacuee:
+		evacuee = Evacuees.query.filter_by(home_id=data["home_id"]).first()
+
+		evacuee.center_id=data["center_id"]
+
+		db.session.commit()
+
+		response_object = {
+			'status': 'success',
+			'message': 'Evacuee successfully assigned'
+		}
+		return response_object, 200
+	else:
+		response_object = {
+			'status': 'fail',
+			'message': 'Evacuee already assigned.'
+		}
+		return response_object, 409
+
+
+
 def save_new_evacuees(data):
 	evacuees = Evacuees.query.filter_by(home_id=data['home_id']).first()
 	if not evacuees:
@@ -41,91 +68,57 @@ def get_all_evacuees():
 def get_a_evacuee(home_id):
 	return Evacuees.query.filter_by(home_id=home_id).first()
 
+
 def delete_evacuees(home_id):
-	evacuees = Evacuees.query.filter_by(home_id=home_id).first()
-	if evacuees:
-			db.session.delete(evacuees)
+	evac = Evacuees.query.filter_by(home_id=home_id).first()
+	if dcenter:
+			db.session.delete(evac)
 			db.session.commit()
 			response_object = {
 			'status' : 'success',
-			'message' : 'evacuees deleted'
+			'message' : 'Evacuee deleted'
 			}
 			return response_object, 204
 	else:
 		response_object = {
 			'status' : 'fail',
-			'message' : 'No matching evacuees found.'
+			'message' : 'No matching evacuee found.'
 		}
 		return response_object, 409
+		
+
 
 def update_evacuees(home_id, data):
+    evacuee = db.session.query(Evacuees).filter_by(home_id=home_id).first()
+    if evacuee:
+        evacuee.name = data['name']
+        evacuee.address = data['address']
+        evacuee.gender = data['gender']
+        evacuee.age = data['age']
+        evacuee.religion = data['religion']
+        evacuee.civil_status = data['civil_status']
+        evacuee.educ_attainment = data['educ_attainment']
+        evacuee.occupation = data['occupation']
 
-	evacuees = Evacuees.query.filter_by(home_id=home_id).first()
-	otherEvacuees = Evacuees.query.filter(Evacuees.home_id != home_id).all()
-	if evacuees:
-		check_existing = False
-		for x in otherEvacuees:
-			if x.id == data['address']:
-				check_existing = True
-		if check_existing:
-			evacuees.name = data['name']
-			evacuees.address = data['address'],
-			evacuees.home_id = data['home_id'],
-			evacuees.date_of_reg = data['date_of_reg'],
-			evacuees.gender = data['gender'],
-			evacuees.age = data['age'],
-			evacuees.religion = data['religion'],
-			evacuees.civil_status = data['civil_status'],
-			evacuees.educ_attainment = data['educ_attainment'],
-			evacuees.occupation = data['occupation']
-			db.session.commit()
-			response_object = {
-			'status' : 'success',
-			'message' : 'distribution center updated'
-			}
-			return response_object, 200
-		else:
-			response_object = {
-			'status' : 'fail',
-			'message' : 'New Address already used.'
-			}
-			return response_object, 409
-	else:
-		response_object = {
-			'status' : 'fail',
-			'message' : 'No matching distribution center found.'
-		}
-		return response_object, 409
+        db.session.commit()
+        response_object = {
+            'status': 'Success',
+            'message': 'Updated Evacuee.'
+        }
+        return response_object, 200
+    else:
+        response_object = {
+            'status': 'Failed',
+            'message': 'No user found'
+        }
+        return response_object, 409
+
+
+
 
 def save_changes(data):
 	db.session.add(data)
 	db.session.commit()
-
-# def update_evacuees(home_id, data):
-# 	evacuees = Evacuees.query.filter_by(home_id=home_id).first()
-# 	if evacuees:
-# 		evacuees.home_id = data['home_id'],
-#         evacuees.name = data['name']
-#         evacuees.address = data['address']
-#         evacuees.date_of_reg = data['date_of_reg'],
-#         evacuees.gender = data['gender'],
-#         evacuees.age = data['age'],
-#         evacuees.religion = data['religion'],
-#         evacuees.civil_status = data['civil_status'],
-#         evacuees.educ_attainment = data['educ_attainment'],
-#         evacuees.occupation = data['occupation']
-#         db.session.commit()
-#         response_object = {
-#             'status': 'Success',
-#             'message': 'evacuees updated.'
-#         }
-#         return response_object, 200
-#     else:
-#     	response_object = {
-#     	'status' = 'failed',
-#     	'message' = 'failed'
-#     	}
-
 
 
 
@@ -145,3 +138,13 @@ def delete_evacuees(home_id):
 			'message' : 'evacuee does not exist'
 		}
 		return response_object, 409
+
+
+
+def search_evacuee(search_term):
+	print(search_term)
+	results = Evacuees.query.filter(((Evacuees.name.like("%"+search_term+"%")) | (Evacuees.address.like("%"+search_term+"%")) | (Evacuees.gender.like("%"+search_term+"%")))).all()
+	return results
+
+
+	

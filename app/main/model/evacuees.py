@@ -1,5 +1,6 @@
 from .. import db
 from app.main.model.dependents import Dependents
+from app.main.model.distcenter import DistCenter
 
 
 class Evacuees(db.Model):
@@ -16,6 +17,8 @@ class Evacuees(db.Model):
 	civil_status = db.Column(db.String(300), nullable = False)
 	educ_attainment = db.Column(db.String(300), nullable = False)
 	occupation = db.Column(db.String(300), nullable = False)
+	center_id = db.Column(db.Integer(), db.ForeignKey('distcenter.id'))
 	dependent = db.relationship('Dependents', backref='dependents_homeID')
+	# center = db.relationship('AssignedCenter', backref='center', lazy='dbynamic', primaryjoin="DistCenter.id == Evacuees.center_id")
 
 
