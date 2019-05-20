@@ -59,6 +59,9 @@ def delete_user(public_id):
 	db.session.delete(public_id)
 	db.session.commit()
 
+
+
+
 def update_user(public_id, data):
     # user = UserAdmin.query.filter_by(public_id=public_id).first()
     user = db.session.query(UserAdmin).filter_by(public_id=public_id).first()

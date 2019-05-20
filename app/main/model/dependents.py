@@ -12,4 +12,5 @@ class Dependents(db.Model):
 	age = db.Column(db.Integer(), nullable = False)
 	educ_attainment = db.Column(db.String(300), nullable = False)
 	occupation = db.Column(db.String(300), nullable = False)
-	homeOwner_id = db.Column(db.Integer(), db.ForeignKey('evacuees.id'))
+	home_id = db.Column(db.Integer(), db.ForeignKey('evacuees.home_id'))
+	# center = db.relationship('AssignedCenter')

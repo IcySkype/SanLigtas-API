@@ -1,13 +1,15 @@
 from flask import request
 from flask_restplus import Resource
 
-from ..util.dto import DistCenterDto
+from ..util.dto import DistCenterDto, AssignedCenterDto
 from ..util.decoratoradmin import token_required, admin_token_required
-from ..service.distcenter_service import save_new_dcenter, get_all_dcenters, get_a_dcenter, update_dcenter, delete_dcenter, search_center
+from ..service.distcenter_service import save_new_dcenter, get_all_dcenters, get_a_dcenter, update_dcenter, delete_dcenter, search_center, assign_admin
 
 api = DistCenterDto.api
 _dcenter = DistCenterDto.distcenter
+_assignadmin = AssignedCenterDto.assignedcenter
 parser = DistCenterDto.parser
+parser2 = AssignedCenterDto.parser
 
 
 @api.route('/')
@@ -78,3 +80,18 @@ class SearchByName(Resource):
 		print(searchterm)
 		results = search_center(searchterm)
 		return results
+
+
+
+			
+@api.route('/assign/admin')			
+class AssignAdmin(Resource):
+	@api.doc('Assign an admin in a center', parser=parser2)
+	@api.response(201, 'Admin successfully assigned.')
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@admin_token_required
+	def post(self):
+		data = request.form
+		return assign_admin(data=data)
+
+
