@@ -4,6 +4,7 @@ from app.main.model.blacklist import BlacklistToken
 from ..config import key
 from .. import db, flask_bcrypt
 
+
 class UserAdmin(db.Model):
     __tablename__ = "useradmin"
 
@@ -17,7 +18,7 @@ class UserAdmin(db.Model):
     public_id = db.Column(db.String(100), unique=True)
     username = db.Column(db.String(50), unique=True)
     pass_hash = db.Column(db.String(100))
-
+    manages = db.relationship("DistCenter")
 
     @property
     def password(self):
