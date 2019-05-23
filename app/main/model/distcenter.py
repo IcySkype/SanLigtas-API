@@ -10,6 +10,7 @@ class DistCenter(db.Model):
 	capacity = db.Column(db.Integer(), nullable = False)
 	public_id = db.Column(db.String(300), nullable = False, unique=True)
 	managed_by = db.Column(db.String(100), db.ForeignKey('useradmin.public_id'), nullable=True, default="None")
+	img = db.Column(db.String(300), nullable=True, default="")
 	
 #class DCManage(db.Model):
 #	__tablename__ = "center_manage"
