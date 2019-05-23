@@ -138,3 +138,10 @@ def search_center(search_term):
 	results = DistCenter.query.filter(((DistCenter.name.like("%"+search_term+"%")) | (DistCenter.address.like("%"+search_term+"%")) | (DistCenter.public_id.like("%"+search_term+"%")))).all()
 	print(results)
 	return results
+
+
+def get_assigned_admin(center_public_id):
+
+	admin = AssignedCenter.query.filter_by(center_public_id=center_public_id).all()
+
+	return admin

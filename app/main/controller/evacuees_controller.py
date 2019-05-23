@@ -1,14 +1,15 @@
 from flask import request
 from flask_restplus import Resource
 
-from ..util.dto import EvacueesDto, AssignedEvacueeDto
+from ..util.dto import EvacueesDto, AssignedEvacueeDto, FemaleAgeRangeDto
 from ..util.decoratoradmin import token_required, admin_token_required
-from ..service.evacuees_service import save_new_evacuees, get_all_evacuees, get_a_evacuee, delete_evacuees, update_evacuees, add_evacuee, search_evacuee
+from ..service.evacuees_service import save_new_evacuees, female_age_range, male_age_range, get_age_female, get_age_male, get_all_evacuees, get_a_evacuee, delete_evacuees, update_evacuees, add_evacuee, search_evacuee, get_center_center_id
 
 api = EvacueesDto.api
 _evacuees = EvacueesDto.evacuees
 parser= EvacueesDto.parser
 parser2 = AssignedEvacueeDto.parser
+parser3 = FemaleAgeRangeDto.parser
 
 
 @api.route('/')
@@ -42,6 +43,7 @@ class AssignEvacuee(Resource):
 	@admin_token_required
 	def put(self):
 		data = request.form
+		print(data)
 		return add_evacuee(data=data)
 
 
@@ -97,6 +99,52 @@ class SearchByUsername(Resource):
 		results = search_evacuee(search_term)
 		return results
 
+
+@api.route('/get/center/<center_id>')			
+class SearchByUsername(Resource):
+	@api.doc('Get center by center ID')
+	@api.response(200, 'Results found.')
+	@api.marshal_list_with(_evacuees, envelope='data')
+	def get(self, center_id):
+		results = get_center_center_id(center_id)
+		return results
+
+			
+			
+@api.route('/age_female')			
+class FemaleAge(Resource):
+	@api.doc('Get age female')
+	@api.response(200, 'Results found.')
+	def get(self):
+		
+		return get_age_female()
+
+
+@api.route('/age_female/<range_age>')
+class FemaleAgeAdd(Resource):
+	@api.doc('Add female range', parser=parser3)
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@admin_token_required
+	def put(self, range_age):
+		return female_age_range(range_age)
+
+			
+@api.route('/age_male')			
+class FemaleAge(Resource):
+	@api.doc('Get age male')
+	@api.response(200, 'Results found.')
+	def get(self):
+		
+		return get_age_male()
+
+
+@api.route('/age_male/<range_age>')
+class FemaleAgeAdd(Resource):
+	@api.doc('Add male range', parser=parser3)
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@admin_token_required
+	def put(self, range_age):
+		return male_age_range(range_age)
 
 			
 			

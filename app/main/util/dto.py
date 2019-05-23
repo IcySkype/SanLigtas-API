@@ -197,3 +197,18 @@ class DependentsDto:
 	parser.add_argument('educ_attainment', type=str, help='Dependents educ_attainment', location='form')
 	parser.add_argument('occupation', type=str, help='Dependents occupation', location='form')
 	parser.add_argument('Authorization', type=str, help='Auth', location='headers')
+
+
+class FemaleAgeRangeDto:
+	api = Namespace('statisticsfemale', description='Statistics and Frequency')
+	statisticsfemale = api.model('statisticsfemale', {
+		'grade_schooler' : fields.Integer(description='No. of Gradeschooler'),
+		'teens' : fields.Integer(description='No. of Teens'),
+		'young_adult' : fields.Integer(description='No. of Young Adult'),
+		'adult' : fields.Integer(description='No. of Adult')
+		})
+	parser = api.parser()
+	parser.add_argument('grade_schooler', type=int, help='No. of Gradeschooler')
+	parser.add_argument('teens', type=int, help='No. of Teens')
+	parser.add_argument('young_adult', type=int, help='No. of Young Adult')
+	parser.add_argument('adult', type=int, help='No. of Adult')
