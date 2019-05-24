@@ -8,6 +8,8 @@ from .main.controller.authmobile_controller import api as authmobile_ns
 from .main.controller.distcenter_controller import api as dcenter_ns
 from .main.controller.evacuees_controller import api as evacuee_ns
 from .main.controller.dependents_controller import api as dependents_ns
+from .main.controller.manage_controller import api as manage_center_ns
+from .main.controller.upload_controller import api as upload_ns
 
 blueprint = Blueprint('api', __name__)
 
@@ -24,4 +26,6 @@ api.add_namespace(authmobile_ns)
 api.add_namespace(dcenter_ns)
 api.add_namespace(evacuee_ns, path='/evacuees')
 api.add_namespace(dependents_ns, path='/dependents')
+api.add_namespace(manage_center_ns)
+api.add_namespace(upload_ns)
 

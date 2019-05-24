@@ -108,7 +108,7 @@ class DistCenterDto:
 	parser.add_argument('name', type=str, help='Distribution Center Name', location='form')
 	parser.add_argument('address', type=str, help='Physical Address of the Distribution Center', location='form')
 	parser.add_argument('capacity', type=int, help='Distribution Center Capacity', location='form')
-	parser.add_argument('Authorization', type=str, help='Auth', location='headers')
+	parser.add_argument('Authorization', location='headers')
 
 class EvacueesDto:
 	api = Namespace('evacuees', description='Evacuees related operations')
@@ -161,4 +161,15 @@ class DependentsDto:
 	parser.add_argument('age', type=int, help='Dependents age', location='form')
 	parser.add_argument('educ_attainment', type=str, help='Dependents educ_attainment', location='form')
 	parser.add_argument('occupation', type=str, help='Dependents occupation', location='form')
-	parser.add_argument('Authorization', type=str, help='Auth', location='headers')
+	parser.add_argument('Authorization', location='headers')
+	
+class ManageCenterDto:
+	api = Namespace('manage', description='Center managing related operations')
+	managecenter = api.model('manage_center',{
+		'admin_id' : fields.String(required=True),
+		'center_id': fields.String(required=True)
+	})
+	parser = api.parser()
+	parser.add_argument('admin_id', type=str, location='form')
+	parser.add_argument('center_id', type=str, location='form')
+	parser.add_argument('Authorization', location='headers')
