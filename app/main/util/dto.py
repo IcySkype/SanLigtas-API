@@ -118,21 +118,21 @@ class EvacueesDto:
 	api = Namespace('evacuees', description='Evacuees related operations')
 	evacuees = api.model('evacuees',{
 		'name' : fields.String(required=True, description='Evacuees Name'),
-		'home_id' : fields.Integer(required=True, description='Evacuees home_id'),
-		'address' : fields.String(required=True, description='Evacuees address'),
+		'home_id' : fields.String(required=True, description='Evacuees home_id'),
+		'is_house_leader' : fields.Boolean(required=True,description='Is evacuee leader of the household?'),
 		'gender' : fields.String(required=True, description='Evacuees gender'),
 		'age' : fields.Integer(required=True, description='Evacueesr age'),
 		'religion' : fields.String(required=True, description='Evacuees religion'),
 		'civil_status' : fields.String(required=True, description='Evacuees civil_status'),
 		'educ_attainment' : fields.String(required=True, description='Evacuees educ_attainment'),
-		'occupation' : fields.String(required=True, description='Evacuees occupation')
+		'occupation' : fields.String(required=True, description='Evacuees occupation'),
+		'public_id' : fields.String(description='Evacuees Public Id')
 	})
-
 
 	parser = api.parser()
 	parser.add_argument('name', type=str, help='Evacuees Name', location='form')
-	parser.add_argument('home_id', type=int, help='Evacuees home_id', location='form')
-	parser.add_argument('address', type=str, help='Evacuees address', location='form')
+	parser.add_argument('home_id', type=str, help='Evacuees home_id', location='form')
+	parser.add_argument('is_house_leader', type=bool, help='Is evacuee leader of household?', location='form')
 	parser.add_argument('gender', type=str, help='Evacuees gender', location='form')
 	parser.add_argument('age', type=int, help='Evacuees age', location='form')
 	parser.add_argument('religion', type=str, help='Evacuees religion', location='form')
@@ -141,32 +141,17 @@ class EvacueesDto:
 	parser.add_argument('occupation', type=str, help='Evacuees occupation', location='form')
 	parser.add_argument('Authorization', location='headers')
 
-
-class DependentsDto:
-	api = Namespace('dependents', description='Dependents related operations')
-	dependents = api.model('dependents',{
-		'name' : fields.String(required=True, description='Dependents Name'),
-		'dependents_id' : fields.Integer(required=True, description='dependents_id'),
-		'dependents_homeID' : fields.Integer(required=True, description='Dependents home ID'),
-		'address' : fields.String(required=True, description='Dependents address'),
-		'gender' : fields.String(required=True, description='Dependents gender'),
-		'age' : fields.Integer(required=True, description='Dependents age'),
-		'educ_attainment' : fields.String(required=True, description='Dependents educ_attainment'),
-		'occupation' : fields.String(required=True, description='Dependents occupation')
-
+class HouseDto:
+	api = Namespace('household', description='Household related operations')
+	household = api.model('household',{
+		'address' : fields.String(required=True, description='Physical Address of the Household'),
+		'public_id' : fields.String(description='Household Public Id')
 	})
+
 	parser = api.parser()
-	parser.add_argument('name', type=str, help='Dependents Name', location='form')
-	parser.add_argument('dependents_id', type=int, help='Dependents id', location='form')
-	parser.add_argument('dependents_homeID', type=int, help='Dependents home id', location='form')
-	parser.add_argument('address', type=str, help='Dependents address', location='form')
-	parser.add_argument('gender', type=str, help='Dependents gender', location='form')
-	parser.add_argument('age', type=int, help='Dependents age', location='form')
-	parser.add_argument('educ_attainment', type=str, help='Dependents educ_attainment', location='form')
-	parser.add_argument('occupation', type=str, help='Dependents occupation', location='form')
+	parser.add_argument('address', type=str, help='Physical Address of the Household', location='form')
 	parser.add_argument('Authorization', location='headers')
 	
-
 class ManageCenterDto:
 	api = Namespace('manage', description='Center managing related operations')
 	managecenter = api.model('manage_center',{
