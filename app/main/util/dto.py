@@ -1,4 +1,5 @@
-from flask_restplus import Namespace, fields
+from flask_restplus import Namespace, fields, inputs
+
 
 
 class UserAdminDto:
@@ -13,6 +14,7 @@ class UserAdminDto:
         'password': fields.String(required=True, description='user password'),
         'public_id': fields.String(description='user Identifier')
     })
+
 	parser = api.parser()
 	parser.add_argument('email', type=str, help='User Email Address', location='form')
 	parser.add_argument('username', type=str, help='User Username', location='form')
@@ -60,8 +62,8 @@ class UserMobileDto:
         'public_id': fields.String(description='user Identifier'),
         'address': fields.String(required=True, description='user address'),
         'contact_number': fields.String(required=True, description='user contact number'),
-
     })
+
 	parser = api.parser()
 	parser.add_argument('email', type=str, help='User Email Address', location='form')
 	parser.add_argument('username', type=str, help='User Username', location='form')
@@ -73,6 +75,7 @@ class UserMobileDto:
 	parser.add_argument('contact_number', type=str, help='User Contact Number', location='form')
 	parser.add_argument('address', type=str, help='User Address', location='form')
 	parser.add_argument('Authorization', type=str, help='Auth', location='headers')
+
 
 class AuthAdminDto:
 	api = Namespace('authadmin', description='Authentication related operations')
@@ -110,6 +113,7 @@ class DistCenterDto:
 	parser.add_argument('capacity', type=int, help='Distribution Center Capacity', location='form')
 	parser.add_argument('Authorization', location='headers')
 
+
 class EvacueesDto:
 	api = Namespace('evacuees', description='Evacuees related operations')
 	evacuees = api.model('evacuees',{
@@ -122,9 +126,9 @@ class EvacueesDto:
 		'civil_status' : fields.String(required=True, description='Evacuees civil_status'),
 		'educ_attainment' : fields.String(required=True, description='Evacuees educ_attainment'),
 		'occupation' : fields.String(required=True, description='Evacuees occupation')
-
-
 	})
+
+
 	parser = api.parser()
 	parser.add_argument('name', type=str, help='Evacuees Name', location='form')
 	parser.add_argument('home_id', type=int, help='Evacuees home_id', location='form')
@@ -150,7 +154,6 @@ class DependentsDto:
 		'educ_attainment' : fields.String(required=True, description='Dependents educ_attainment'),
 		'occupation' : fields.String(required=True, description='Dependents occupation')
 
-
 	})
 	parser = api.parser()
 	parser.add_argument('name', type=str, help='Dependents Name', location='form')
@@ -163,6 +166,7 @@ class DependentsDto:
 	parser.add_argument('occupation', type=str, help='Dependents occupation', location='form')
 	parser.add_argument('Authorization', location='headers')
 	
+
 class ManageCenterDto:
 	api = Namespace('manage', description='Center managing related operations')
 	managecenter = api.model('manage_center',{
@@ -172,4 +176,44 @@ class ManageCenterDto:
 	parser = api.parser()
 	parser.add_argument('admin_id', type=str, location='form')
 	parser.add_argument('center_id', type=str, location='form')
+	parser.add_argument('Authorization', location='headers')
+
+
+class RGoodsDto:
+	api = Namespace('rgoods', description='Center managing related operations')
+	rgoods = api.model('rgoods',{
+		'name' : fields.String(required=True, description='Relief Goods Name'),
+		'code': fields.String(required=True, description='Relief Goods Code'),
+		'type': fields.String(required=True, description='Relief Goods Type: Clothing|Consumable|Cash'),
+		'status': fields.String(required=True, description='Relief Goods Status'),
+		'amount': fields.Integer(required=True, description='Relief Goods Amount'),
+
+		'center_id': fields.String(required=True, description='Distribution Center where goods are stored/distributed.'),
+		'received_date': fields.Date(required=True, description='Date goods received'),
+		'received_from': fields.String(required=True, description='Personnel recieving goods'),
+		'distribute_date': fields.Date(required=False, description='Date goods distributed'),
+
+		'expiry': fields.Date(required=False, description='Consumable Expiry Date'),
+		'size': fields.String(required=False, description='Clothing Size'),
+		'clothing_type': fields.String(required=False, description='Clothing Type: Upper|Lower|Headwear|Footwear|Underwear'),
+		'condition': fields.String(required=False, description='Condition of clothes')
+	})
+
+	parser = api.parser()
+	parser.add_argument('name', type=str, location='form')
+	parser.add_argument('code', type=str, location='form')
+	parser.add_argument('type', type=str, location='form')
+	parser.add_argument('status', type=str, location='form')
+	parser.add_argument('amount', type=int, location='form')
+
+	parser.add_argument('center_id', type=str, location='form')
+	parser.add_argument('received_date', type=inputs.date_from_iso8601, location='form')
+	parser.add_argument('received_from', type=str, location='form')
+	parser.add_argument('distribute_date', type=inputs.date_from_iso8601, location='form')
+
+	parser.add_argument('expiry', type=inputs.date_from_iso8601, location='form')
+	parser.add_argument('size', type=str, location='form')
+	parser.add_argument('clothing_type', type=str, location='form')
+	parser.add_argument('condition', type=str, location='form')
+
 	parser.add_argument('Authorization', location='headers')
