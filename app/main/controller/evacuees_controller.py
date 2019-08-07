@@ -3,16 +3,19 @@ from flask_restplus import Resource
 
 from ..util.dto import EvacueesDto
 from ..util.decoratoradmin import token_required, admin_token_required
-from ..service.evacuees_service import save_new_evacuees, get_all_evacuees, get_a_evacuee, delete_evacuees, update_evacuees
+from ..service.evacuees_service import save_new_evacuees, get_all_evacuees, get_evacuees_by_house, get_an_evacuee, delete_evacuees, update_evacuees,statistics_by_age, statistics_age
 
 api = EvacueesDto.api
 _evacuees = EvacueesDto.evacuees
 parser= EvacueesDto.parser
 
 
+parse_auth = api.parser()
+parse_auth.add_argument('Authorization', type=str, help='Auth', location='headers')
+
 @api.route('/')
 class EvacueesList(Resource):
-	@api.doc('list_of_registered_evacuues')
+	@api.doc('list_of_registered_evacuues',parser=parse_auth)
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	@api.marshal_list_with(_evacuees, envelope='data')
@@ -30,40 +33,40 @@ class EvacueesList(Resource):
 		print (data)
 		return save_new_evacuees(data=data)
 
-@api.route('/<home_id>')
-@api.param('home_id', 'The Evacuee identifier')
+@api.route('/<public_id>')
+@api.param('public_id', 'The Evacuee identifier')
 @api.response(404, 'Evacuee not found.')
 class Evacuees(Resource):
-	@api.doc('get a evacuees')
+	@api.doc('get an evacuees',parser=parse_auth)
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	@api.marshal_list_with(_evacuees)
-	def get(self, home_id):
+	def get(self, public_id):
 		#gets a specific user with public_id
-		evacuees = get_a_evacuee(home_id)
+		evacuees = get_an_evacuee(public_id)
 		if not evacuees:
 			api.abort(404)
 		else:
 			return evacuees
 	
-	@api.doc('delete an evacuees')
+	@api.doc('delete an evacuee',parser=parse_auth)
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
-	def delete(self, home_id):
-		evacuees = get_a_evacuee(home_id)
+	def delete(self, public_id):
+		evacuees = delete_evacuees(public_id)
 		if not evacuees:
 			api.abort(404)
 		else:
 			return evacuees
 
-	@api.doc('update a evacuees', parser=parser)
+	@api.doc('update a evacuee', parser=parser)
 	@api.response(201, 'evacuees Succesfully Updated.')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	def put(self, home_id):
-		evacuees = get_a_evacuee(home_id)
+		evacuees = get_an_evacuee(public_id)
 		data = request.form
-		evacuees = update_evacuees(home_id, data)
+		evacuees = update_evacuees(public_id, data)
 		if not evacuees:
 			api.abort(404)
 		else:
@@ -79,20 +82,28 @@ class SearchByName(Resource):
 		results = search_by_name(searchterm_evacuees)
 		return results
 
-@api.route('/search/by_address/<searchterm_address>')			
+@api.route('/search/by_home/<home_id>')			
 class SearchByAddress(Resource):		
 	@api.doc('search by address')
 	@api.response(200, 'Results found.')
 	@api.marshal_list_with(_evacuees, envelope='data')
-	def get(self, searchterm_address):
-		results = search_by_fullname(searchterm_address)
+	def get(self, home_id):
+		results = get_evacuees_by_house(home_id)
 		return results
 
-@api.route('/search/by_id/<searchterm_id>')			
-class SearchByPublicId(Resource):
-	@api.doc('search by home id')
+@api.route('/statistics')			
+class Stats(Resource):		
+	@api.doc('statistics of ages')
 	@api.response(200, 'Results found.')
-	@api.marshal_list_with(_evacuees, envelope='data')
-	def get(self, searchterm_id):
-		results = search_by_public_id(searchterm_id)
+	def get(self):
+		results = statistics_age()
+		return results
+
+
+@api.route('/statistics/<age>')			
+class Stats(Resource):		
+	@api.doc('statistics of ages')
+	@api.response(200, 'Results found.')
+	def get(self,age):
+		results = statistics_by_age(age)
 		return results
