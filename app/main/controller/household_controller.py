@@ -46,13 +46,5 @@ class Evacuees(Resource):
 		else:
 			return house
 	
-	@api.doc('delete an evacuee',parser=parse_auth)
-	@api.header('Authorization', 'JWT TOKEN', required=True)
-	@token_required
-	def delete(self, public_id):
-		house = delete_house(public_id)
-		if not house:
-			api.abort(404)
-		else:
-			return house
+
 

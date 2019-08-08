@@ -88,7 +88,7 @@ def update_evacuees(public_id, data):
 	evacuee = Evacuees.query.filter_by(public_id=public_id).first()
 	if evacuee:
 		household = House.query.filter_by(public_id=evacuee.home_id).first()
-		house_members = Evacuees.query.filter(Evacuees.public_id != public_id, home_id==evacuee.home_id).all()
+		house_members = Evacuees.query.filter(Evacuees.public_id != public_id, Evacuees.home_id==evacuee.home_id).all()
 		if household:
 			check_existing = False
 			for x in house_members:

@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from ..util.dto import EvacueesDto
 from ..util.decoratoradmin import token_required, admin_token_required
-from ..service.evacuees_service import save_new_evacuees, get_all_evacuees, get_evacuees_by_house, get_an_evacuee, delete_evacuees, update_evacuees,statistics_by_age, statistics_age
+from ..service.evacuees_service import save_new_evacuees, get_all_evacuees, get_evacuees_by_house, get_an_evacuee, delete_evacuees, update_evacuees,statistics_by_age, statistics_age, search_by_name
 
 api = EvacueesDto.api
 _evacuees = EvacueesDto.evacuees
@@ -63,7 +63,7 @@ class Evacuees(Resource):
 	@api.response(201, 'evacuees Succesfully Updated.')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
-	def put(self, home_id):
+	def put(self, public_id):
 		evacuees = get_an_evacuee(public_id)
 		data = request.form
 		evacuees = update_evacuees(public_id, data)
@@ -79,7 +79,7 @@ class SearchByName(Resource):
 	@api.response(200, 'Results found.')
 	@api.marshal_list_with(_evacuees, envelope='data')
 	def get(self, searchterm_name):
-		results = search_by_name(searchterm_evacuees)
+		results = search_by_name(searchterm_name)
 		return results
 
 @api.route('/search/by_home/<home_id>')			
