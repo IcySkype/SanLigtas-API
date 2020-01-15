@@ -82,7 +82,7 @@ def delete_evacuees(public_id):
 			'message' : 'No matching evacuees found.'
 		}
 		return response_object, 409
-
+ 
 def update_evacuees(public_id, data):
 	#cannot update: home_id, is_house_leader, public_id
 	evacuee = Evacuees.query.filter_by(public_id=public_id).first()

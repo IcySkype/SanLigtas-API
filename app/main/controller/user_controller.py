@@ -1,17 +1,15 @@
 from flask import request
 from flask_restplus import Resource
 
-from ..util.dto import UserAdminDto, PasswordAdminDto
+from ..util.dto import UserDto, PasswordDto
 from ..util.decoratoradmin import token_required
 from ..service.useradmin_service import save_new_user, get_all_users, get_a_user, delete_user, update_user, update_password, search_by_user
 
-api = UserAdminDto.api
-_user = UserAdminDto.user
-parser= UserAdminDto.parser
-parser2 = PasswordAdminDto.parser
+api = UserDto.api
+_user = UserDto.user
+parser= UserDto.parser
+parser2 = PasswordDto.parser
 
-#TODO: ADMIN mu add users
-# lahi ra sya sa user mu register sa ilang selves
 @api.route('/')
 class UserList(Resource):
 	@api.doc('list_of_registered_users')
@@ -74,14 +72,14 @@ class User(Resource):
 
 
 
-@api.route('/password/<public_id>')
+@api.route('/<public_id>/changepass')
 @api.response(404, 'User not found.')
 class UserPassword(Resource):
 	@api.doc('change password', parser=parser2)
 	@api.response(201, 'Password successfully updated.')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
-	def put(self, public_id):
+	def post(self, public_id):
 		user = get_a_user(public_id)
 		data = request.form
 		user = update_password(public_id, data)
