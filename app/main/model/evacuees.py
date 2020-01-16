@@ -20,6 +20,7 @@ class Evacuees(db.Model):
 	
 	family_id = db.Column(db.String(300), db.ForeignKey('family.public_id'), nullable=True)
 	barangay_id = db.Column(db.Integer(), db.ForeignKey('barangay.id'))
+	center_id = db.Column(db.String(300), db.ForeignKey('distcenter.public_id'), nullable=True)
 	
 class Family(db.Model):
 	__tablename__ = "family"

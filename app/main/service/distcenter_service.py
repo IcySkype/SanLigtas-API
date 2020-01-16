@@ -3,6 +3,8 @@ import datetime
 
 from app.main import db
 from app.main.model.distcenter import DistCenter, Barangay
+from app.main.model.user import Account
+from app.main.model.evacuees import Evacuees
 
 #initializes barangay table with default barangays.
 def brgy_init():
@@ -102,3 +104,46 @@ def delete_dcenter(public_id):
 		
 def search_center(search_term):
 	return DistCenter.query.filter(DistCenter.name.like("%"+search_term+"%")).all()
+
+def manage(public_id, user_id):
+	center = DistCenter.query.filter_by(public_id=public_id).first()
+	admin = Account.query.filter_by(public_id=user_id).first()
+	if center and admin:
+		if admin.role_id != 1:
+			admin.centers.append(center)
+			db.session.commit()
+			response_object = {
+			'status' : 'Success',
+			'message' : 'Manager added.'
+			}
+			return response_object, 200
+		else:
+			response_object = {
+			'status' : 'Fail',
+			'message' : 'Manager cannot be Normal User'
+			}
+			return response_object, 409
+	else:
+		response_object = {
+			'status' : 'Fail',
+			'message' : 'No such user or center exists.'
+		}
+		return response_object, 409
+		
+def register(public_id, evac_id):
+	center = DistCenter.query.filter_by(public_id=public_id).first()
+	evacuee = Evacuees.query.filter_by(public_id=evac_id).first()
+	if center and evacuee:
+		center.evacs.append(evacuee)
+		db.session.commit()
+		response_object = {
+			'status' : 'Success',
+			'message' : 'Evacuee registered to center.'
+		}
+		return response_object, 200
+	else:
+		response_object = {
+			'status' : 'Fail',
+			'message' : 'No such evacuee or center exists.'
+		}
+		return response_object, 409

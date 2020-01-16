@@ -3,6 +3,7 @@ import datetime
 
 from app.main import db
 from app.main.model.evacuees import Evacuees, Family
+from app.main.model.distcenter import DistCenter
 
 #Evacuee Family Services
 def get_family(public_id):
@@ -201,4 +202,4 @@ def stat_AgeVsGender(gender):
 		data['list'].append({ x: total })
 	return data
 
-		
+

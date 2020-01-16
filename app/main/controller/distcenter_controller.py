@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from ..util.dto import DistCenterDto
 from ..util.decoratoradmin import token_required, admin_token_required
-from ..service.distcenter_service import save_new_dcenter, get_all_sorted, get_a_dcenter, update_dcenter, delete_dcenter, search_center
+from ..service.distcenter_service import save_new_dcenter, get_all_sorted, get_a_dcenter, update_dcenter, delete_dcenter, search_center, manage, register
 
 api = DistCenterDto.api
 _dcenter = DistCenterDto.distcenter
@@ -68,10 +68,27 @@ class DistCenter(Resource):
 			
 @api.route('/search/<searchterm>')			
 class SearchByName(Resource):
-	@api.doc('search by name, address or public_id')
+	@api.doc('search by name')
 	@api.response(200, 'Results found.')
 	@api.marshal_list_with(_dcenter, envelope='data')
 	def get(self, searchterm):
-		print(searchterm)
 		results = search_center(searchterm)
 		return results
+
+@api.route('/<public_id>/manage/<user_id>')
+@api.param('public_id', 'The Distribution Center ID')
+@api.param('user_id', 'Account ID')
+class Manager(Resource):
+	@api.doc('Assign manager')
+	@api.response(200, 'Manager Added.')
+	def post(self, public_id, user_id):
+		return manage(public_id, user_id)
+		
+@api.route('/<public_id>/register/<evac_id>')
+@api.param('public_id', 'The Distribution Center ID')
+@api.param('evac_id', 'Evacuee ID')
+class Register(Resource):
+	@api.doc('Register evacuee to center')
+	@api.response(200, 'Evacuee registered to center.')
+	def post(self, public_id, evac_id):
+		return register(public_id, evac_id)

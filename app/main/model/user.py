@@ -4,6 +4,7 @@ from app.main.model.blacklist import BlacklistToken
 from ..config import key
 from .. import db, flask_bcrypt
 
+
 class User(db.Model):
 	__tablename__ = "user"
 
