@@ -2,66 +2,114 @@ import uuid
 import datetime
 
 from app.main import db
-from app.main.model.evacuees import Evacuees
-from app.main.model.household import House
+from app.main.model.evacuees import Evacuees, Family
 
-def save_new_evacuees(data):
-	household = House.query.filter_by(public_id=data['home_id']).first()
-	house_members = Evacuees.query.filter_by(home_id=data['home_id']).all()
-	if household:
-		check_existing = False
-		has_leader = False
-		for x in house_members:
-			if x.name == data['name']:
-				check_existing = True
-			if x.is_house_leader:
-				has_leader = True
-		if not check_existing:
-			if has_leader and data['is_house_leader']=='true':
-				response_object = {
-				'status' : 'failed',
-				'message' : 'Household already has leader. Error in adding evacuee as household leader.'
-				}
-				return response_object, 409
+#Evacuee Family Services
+def get_family(public_id):
+	return Family.query.filter_by(public_id=public_id).first()
+	#to get specific family member, use FamilyObject.members[0-...]
+	
+def get_all_families():
+	return Family.query.all()
 
-			new_evacuees = Evacuees(
-				name=data['name'],
-				home_id=data['home_id'],
-				is_house_leader=int(data['is_house_leader'] == 'true'),
-				public_id=str(uuid.uuid4()),
-				date_of_reg=datetime.datetime.utcnow(),
-				gender=data['gender'],
-				age=data['age'],
-				religion=data['religion'],
-				civil_status=data['civil_status'],
-				educ_attainment=data['educ_attainment'],
-				occupation=data['occupation']
-			)
-			save_changes(new_evacuees)
+def create_family(data):
+	family = Family.query.filter_by(name=data['name']).all()
+	if not family:
+		new_family = Family(
+			name = data['name'],
+			public_id=str(uuid.uuid4())
+		)
+		save_changes(new_family)
+		response_object = {
+			'status' : 'Success',
+			'message' : 'Family created.'
+		}
+		return response_object, 201
+	else:
+		response_object = {
+			'status' : 'Failed',
+			'message' : 'Family exists.'
+		}
+		return response_object, 409
+		
+def edit_family(public_id, data):
+	family = Family.query.filter_by(public_id=public_id).first()
+	if family:
+		if Family.query.filter_by(name=data['name']).count() == 0:
+			family.name = data['name']
+			db.session.commit()
+			save_changes(new_family)
 			response_object = {
-				'status' : 'success',
-				'message' : 'Evacuee added'
+				'status' : 'Success',
+				'message' : 'Family name changed.'
 			}
 			return response_object, 201
 		else:
 			response_object = {
-				'status' : 'failed',
-				'message' : 'Evacuee name already exists in household'
+				'status' : 'Failed',
+				'message' : 'Family name already exists.'
 			}
 			return response_object, 409
 	else:
 		response_object = {
+			'status' : 'Failed',
+			'message' : 'Family exists.'
+		}
+		return response_object, 409
+		
+def delete_family(public_id):
+	family = Family.query.filter_by(public_id=public_id).first()
+	if family:
+		db.session.delete(family)
+		db.session.commit()
+		response_object = {
+			'status' : 'success',
+		'message' : 'Family removed.'
+		}
+		return response_object, 204
+	else:
+		response_object = {
 			'status' : 'fail',
-			'message' : 'Household does not exist'
+			'message' : 'No matching family found.'
+		}
+		return response_object, 409
+		
+#Evacuee Services
+def save_new_evacuees(data):
+	evacuee = Evacuees.query.filter_by(first_name=data['first_name'], middle_name=data['middle_name'], last_name=data['last_name']).all()
+	if not evacuee:
+		new_evacuees = Evacuees(
+			public_id=str(uuid.uuid4()),
+			
+			first_name=data['first_name'],
+			middle_name=data['middle_name'],
+			last_name=data['last_name'],
+
+			age=data['age'],
+			gender=data['gender'],
+			religion=data['religion'],
+			civil_status=data['civil_status'],
+			date_of_reg=datetime.datetime.utcnow(),
+			
+			family_id=data['family'], #Evacuee can have NULL family.
+			barangay_id=data['barangay']
+		)
+		save_changes(new_evacuees)
+		response_object = {
+			'status' : 'success',
+			'message' : 'Evacuee added'
+		}
+		return response_object, 201
+	else:
+		response_object = {
+			'status' : 'fail',
+			'message' : 'Evacuee does not exist.'
 		}
 		return response_object, 409
 
 
 def get_all_evacuees():
 	return Evacuees.query.all()
-
-def get_evacuees_by_house(home_id):
-	return Evacuees.query.filter_by(home_id=home_id).all()
 
 def get_an_evacuee(public_id):
 	return Evacuees.query.filter_by(public_id=public_id).first()
@@ -84,47 +132,38 @@ def delete_evacuees(public_id):
 		return response_object, 409
  
 def update_evacuees(public_id, data):
-	#cannot update: home_id, is_house_leader, public_id
 	evacuee = Evacuees.query.filter_by(public_id=public_id).first()
 	if evacuee:
-		household = House.query.filter_by(public_id=evacuee.home_id).first()
-		house_members = Evacuees.query.filter(Evacuees.public_id != public_id, Evacuees.home_id==evacuee.home_id).all()
-		if household:
-			check_existing = False
-			for x in house_members:
-				if x.name == data['name']:
-					check_existing = True
+		#if no other evacuee shares new name, then update
+		if Evacuees.query.filter_by(first_name=data['first_name'], middle_name=data['middle_name'], last_name=data['last_name']).count == 0:
+			evacuee.first_name=data['first_name']
+			evacuee.middle_name=data['middle_name']
+			evacuee.last_name=data['last_name']
 
-			if not check_existing:
-				evacuee.name = data['name']
-				evacuee.gender = data['gender']
-				evacuee.age = data['age']
-				evacuee.religion = data['religion']
-				evacuee.civil_status = data['civil_status']
-				evacuee.educ_attainment = data['educ_attainment']
-				evacuee.occupation = data['occupation']
-				db.session.commit()
-				response_object = {
-				'status' : 'success',
-				'message' : 'Evacuees updated'
-				}
-				return response_object, 200
-			else:
-				response_object = {
-				'status' : 'fail',
-				'message' : 'Name chosen for replacement has already been taken'
-				}
-				return response_object, 409
+			evacuee.age=data['age']
+			evacuee.gender=data['gender']
+			evacuee.religion=data['religion']
+			evacuee.civil_status=data['civil_status']
+
+			evacuee.family_id=data['family'] #Evacuee can have NULL family.
+			evacuee.barangay_id=data['barangay']
+			
+			db.session.commit()
+			response_object = {
+				'status' : 'Success',
+				'message' : 'Evacuee updated.'
+			}
+			return response_object, 200
 		else:
 			response_object = {
-				'status' : 'fail',
-				'message' : 'Household not found.'
+				'status' : 'Fail',
+				'message' : 'There already exists someone with that name.'
 			}
 			return response_object, 409
 	else:
 		response_object = {
-			'status' : 'fail',
-			'message' : 'No matching evacuee found.'
+			'status' : 'Fail',
+			'message' : 'Evacuee not found.'
 		}
 		return response_object, 409
 
@@ -133,20 +172,33 @@ def save_changes(data):
 	db.session.commit()
 		
 def search_by_name(search_term):
-	results = Evacuees.query.filter(Evacuees.name.ilike('%'+search_term+'%')).all()
+	results = Evacuees.query.filter((Evacuees.first_name.ilike('%'+search_term+'%'))|(Evacuees.middle_name.ilike('%'+search_term+'%')) | (Evacuees.last_name.ilike('%'+search_term+'%'))).all()
+	return results
+	
+def search_family(search_term):
+	results = Family.query.filter(Family.name.ilike('%'+search_term+'%')).all()
 	return results
 
-def statistics_age():
+def stat_AgeVsGender(gender):
+	#Warning: 'Male' != 'male'. will display different numbers.
 	data = {'list': []}
-	for x in range(125):
-		if statistics_by_age(x) != None:
-			data['list'].append(statistics_by_age(x))
+	#age group: Baby/Toddler, Child, Adolescent, Adult, Senior
+	age_group = ['0-3', '4-10','10-19', '20-50', '51-150']
+	switcher = {
+		'0-3': (0,3),
+		'4-10': (4,10),
+		'10-19': (10,19),
+		'20-50': (20,50),
+		'51-150': (51,150)
+	}
+	for x in age_group:	
+		min = switcher[x][0]
+		max = switcher[x][1]
+		total = 0
+		for y in range(min,max):
+			counter = Evacuees.query.filter_by(age=y, gender=gender).count()
+			total = total + counter
+		data['list'].append({ x: total })
 	return data
 
-
-def statistics_by_age(age):
-	counter = Evacuees.query.filter_by(age=age).count()
-	if counter > 0:
-		return { 'age' : age, 'count' : counter }
-	else:
-		return None
+		

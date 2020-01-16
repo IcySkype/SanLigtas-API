@@ -19,17 +19,18 @@ def check_role(role_id):
 		
 #account details saved to account table. user details saved to user table.
 def save_new_user(data):
-	user = Account.query.filter_by(email=data['email']).first()
+	user = Account.query.filter_by(username=data['username']).first()
 	if not user:
 		id=str(uuid.uuid4())
-		new_acc = Acc(
+		new_acc = Account(
 			public_id = id,
 			username=data['username'],
 			password=data['password'],
-			role=data['role'],
+			role_id=data['role_id'],
 			isActive=True
 			)
 		new_user = User(
+			acc_id=id,
 			first_name=data['first_name'],
 			middle_name=data['middle_name'],
 			last_name=data['last_name'],
@@ -37,7 +38,7 @@ def save_new_user(data):
 			registered_on=datetime.datetime.utcnow()
 		)
 		save_changes(new_acc, new_user)
-		return generate_token(new_user)
+		return generate_token(new_acc)
 	else:
 		response_object = {
 			'status' : 'fail',
@@ -48,7 +49,7 @@ def save_new_user(data):
 #checks if old password matches. then changes pass to new password
 def update_password(username, data):
 	user = Account.query.filter_by(username=username).first()
-	if user and user.check_password(data.get('old_pass'):
+	if user and user.check_password(data.get('old_pass')):
 		user.password = data['new_pass']
 		db.session.commit()
 		response_object = {
@@ -70,7 +71,7 @@ def get_all_users():
 
 #account left outer join user, specific user
 def get_a_user(public_id):
-	return db.session.query(Account.public_id, Account.username, User.first_name, User.middle_name, User.last_name, User.gender, User.registered_on, Account.role, Account.isActive).outerjoin(User, Account.public_id == User.acc_id).filter(Account.public_id == public_id)
+	return db.session.query(Account.public_id, Account.username, User.first_name, User.middle_name, User.last_name, User.gender, User.registered_on, Account.role, Account.isActive).outerjoin(User, Account, Account.public_id == User.acc_id).filter(Account.public_id == public_id)
 
 
 #delete is now deactivate.
@@ -104,7 +105,7 @@ def update_user(public_id, data):
 
 #search using username
 def search_by_user(search_term):
-	results = Account.query.filter((Account.username.like("%"+search_term+"%")).all()
+	results = Account.query.filter(Account.username.like("%"+search_term+"%")).all()
 	return results
 
 

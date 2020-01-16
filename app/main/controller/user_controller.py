@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from ..util.dto import UserDto, PasswordDto
 from ..util.decoratoradmin import token_required
-from ..service.useradmin_service import save_new_user, get_all_users, get_a_user, delete_user, update_user, update_password, search_by_user
+from ..service.user_service import save_new_user, get_all_users, get_a_user, delete_user, update_user, update_password, search_by_user
 
 api = UserDto.api
 _user = UserDto.user
@@ -23,7 +23,6 @@ class UserList(Resource):
 	@api.response(201, 'User successfully created.')
 	@api.doc('create a new user', parser=parser)
 	def post(self):
-		#create new user
 		data = request.form
 		return save_new_user(data=data)
 

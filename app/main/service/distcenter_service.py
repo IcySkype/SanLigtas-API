@@ -2,22 +2,34 @@ import uuid
 import datetime
 
 from app.main import db
-from app.main.model.distcenter import DistCenter
+from app.main.model.distcenter import DistCenter, Barangay
 
+#initializes barangay table with default barangays.
+def brgy_init():
+	if Barangay.query.count() == 0:
+		default_brgy = ['Tambo', 'Hinaplanon', 'San Roque']
+		for name in default_brgy:
+			new_brgy = Barangay(name=name)
+			db.session.add(new_brgy)
+			db.session.commit()
+			
+def check_brgy(id):
+	brgy = Barangay.query.filter_by(id=id).first()
+	return brgy.name
 
 def save_new_dcenter(data):
-	dcenter = DistCenter.query.filter_by(address=data['address']).first()
+	dcenter = DistCenter.query.filter_by(name=data['name']).first()
 	if not dcenter:
 		new_dcenter = DistCenter(
 			name=data['name'],
-			address=data['address'],
+			barangay_id=data['barangay'],
 			capacity=data['capacity'],
 			public_id=str(uuid.uuid4())
 		)
 		save_changes(new_dcenter)
 		response_object = {
-			'status' : 'success',
-			'message' : 'distribution center added'
+			'status' : 'Success.',
+			'message' : 'Center added.'
 		}
 		return response_object, 201
 	else:
@@ -27,13 +39,14 @@ def save_new_dcenter(data):
 		}
 		return response_object, 409
 
-
 def get_all_dcenters():
 	return DistCenter.query.all()
 
 def get_a_dcenter(public_id):
 	return DistCenter.query.filter_by(public_id=public_id).first()
 
+def get_all_sorted():
+	return db.session.query(DistCenter.public_id, DistCenter.name, Barangay.name, DistCenter.capacity).outerjoin(Barangay, DistCenter.public_id == Barangay.id).all()
 
 def save_changes(data):
 	db.session.add(data)
@@ -43,34 +56,32 @@ def update_dcenter(public_id, data):
 	dcenter = DistCenter.query.filter_by(public_id=public_id).first()
 	otherdcenters = DistCenter.query.filter(DistCenter.public_id != public_id).all()
 	if dcenter:
-		check_existing = True
+		name_exists = False
 		for x in otherdcenters:
-			if x.id == data['address']:
-				check_existing = False
-		if check_existing:
+			if x.name == data['name']:
+				name_exists = True
+		if not name_exists:
 			dcenter.name=data['name'],
-			dcenter.address=data['address'],
+			dcenter.barangay_id=data['barangay'],
 			dcenter.capacity=data['capacity']
 			db.session.commit()
 			response_object = {
-			'status' : 'success',
-			'message' : 'distribution center updated'
+			'status' : 'Success',
+			'message' : 'Center updated.'
 			}
 			return response_object, 200
 		else:
-			print(data['address'])
 			response_object = {
 			'status' : 'fail',
-			'message' : 'New Address already used.'
+			'message' : 'New Name already exists'
 			}
 			return response_object, 409
 	else:
 		response_object = {
 			'status' : 'fail',
-			'message' : 'No matching distribution center found.'
+			'message' : 'No matching Center found.'
 		}
 		return response_object, 409
-
 
 def delete_dcenter(public_id):
 	dcenter = DistCenter.query.filter_by(public_id=public_id).first()
@@ -78,20 +89,16 @@ def delete_dcenter(public_id):
 			db.session.delete(dcenter)
 			db.session.commit()
 			response_object = {
-			'status' : 'success',
-			'message' : 'distribution center deleted'
+			'status' : 'Success',
+			'message' : 'Center deleted.'
 			}
 			return response_object, 204
 	else:
 		response_object = {
 			'status' : 'fail',
-			'message' : 'No matching distribution center found.'
+			'message' : 'No matching Center found.'
 		}
 		return response_object, 409
 		
-
-
 def search_center(search_term):
-	results = DistCenter.query.filter(((DistCenter.name.like("%"+search_term+"%")) | (DistCenter.address.like("%"+search_term+"%")) | (DistCenter.public_id.like("%"+search_term+"%")))).all()
-	print(results)
-	return results
+	return DistCenter.query.filter(DistCenter.name.like("%"+search_term+"%")).all()

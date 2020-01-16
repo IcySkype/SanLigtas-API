@@ -19,6 +19,16 @@ migrate = Migrate(app, db)
 
 manager.add_command('db', MigrateCommand)
 
+from app.main.service.user_service import role_init
+from app.main.service.distcenter_service import brgy_init
+@manager.command
+def init():
+	print("Initializing default values.")
+	role_init()
+	brgy_init()
+	print("Default values loaded into database.")
+	
+
 @manager.command
 def run():
 	app.run()

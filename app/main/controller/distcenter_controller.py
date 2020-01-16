@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from ..util.dto import DistCenterDto
 from ..util.decoratoradmin import token_required, admin_token_required
-from ..service.distcenter_service import save_new_dcenter, get_all_dcenters, get_a_dcenter, update_dcenter, delete_dcenter, search_center
+from ..service.distcenter_service import save_new_dcenter, get_all_sorted, get_a_dcenter, update_dcenter, delete_dcenter, search_center
 
 api = DistCenterDto.api
 _dcenter = DistCenterDto.distcenter
@@ -17,7 +17,7 @@ class DCenterList(Resource):
 	@token_required
 	@api.marshal_list_with(_dcenter, envelope='data')
 	def get(self):
-		return get_all_dcenters()
+		return get_all_sorted()
   
 	@api.response(201, 'Center successfully created.')
 	@api.doc('add a new distribution center', parser=parser)
@@ -65,9 +65,6 @@ class DistCenter(Resource):
 			api.abort(404)
 		else:
 			return dcenter
-			
-
-
 			
 @api.route('/search/<searchterm>')			
 class SearchByName(Resource):

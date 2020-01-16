@@ -1,16 +1,14 @@
 from flask_restplus import Namespace, fields, inputs
 
-
-
 class UserDto:
 	api = Namespace('user', description='User related operations')
 	user = api.model('user', {
         'username': fields.String(required=True, description='user username'),
         'password': fields.String(required=True, description='user password'),
         'first_name': fields.String(required=True, description='user first name'),
-		'middle_name': fields.String(description='user first name'),
+		'middle_name': fields.String(description='user middle name'),
         'last_name': fields.String(required=True, description='user last name'),
-        'role': fields.Integer(required=True, description='user role'),
+        'role_id': fields.Integer(required=True, description='user role'),
         'gender': fields.String(required=True, description='user gender'),
         'public_id': fields.String(description='user Identifier')
     })
@@ -19,9 +17,9 @@ class UserDto:
 	parser.add_argument('username', type=str, help='User Username', location='form')
 	parser.add_argument('password', type=str, help='User Password', location='form')
 	parser.add_argument('first_name', type=str, help='User First Name', location='form')
-	parser.add_argument('first_name', type=str, help='User Middle Name', location='form')
+	parser.add_argument('middle_name', type=str, help='User Middle Name', location='form')
 	parser.add_argument('last_name', type=str, help='User Last Name', location='form')
-	parser.add_argument('role', type=int, help='User Role', location='form')
+	parser.add_argument('role_id', type=int, help='User Role', location='form')
 	parser.add_argument('gender', type=str, help='User Gender', location='form')
 	parser.add_argument('Authorization', type=str, help='Auth', location='headers')
 	
@@ -38,17 +36,27 @@ class PasswordDto:
 	parser.add_argument('old_pass', type=str, help='Current Password', location='form')
 	parser.add_argument('new_pass', type=str, help='New Password', location='form')
 
+class AuthDto:
+	api = Namespace('authadmin', description='Authentication related operations')
+	user_auth = api.model('auth_details',{
+		'username' : fields.String(required=True, description='Username'),
+		'password' : fields.String(required=True, description='Password')
+	})
+	parser = api.parser()
+	parser.add_argument('username', type=str, help='Username', location='form')
+	parser.add_argument('password', type=str, help='Password', location='form')
+
 class DistCenterDto:
 	api = Namespace('distcenter', description='Distribution Center related operations')
 	distcenter = api.model('distcenter',{
 		'name' : fields.String(required=True, description='Distribution Center Name'),
-		'address' : fields.String(required=True, description='Physical Address of the Distribution Center'),
+		'barangay_id' : fields.Integer(required=True, description='Physical Address of the Distribution Center'),
 		'capacity' : fields.Integer(required=True, description='Distribution Center Capacity'),
 		'public_id' : fields.String(description='Distribution Center Public Id')
 	})
 	parser = api.parser()
 	parser.add_argument('name', type=str, help='Distribution Center Name', location='form')
-	parser.add_argument('address', type=str, help='Physical Address of the Distribution Center', location='form')
+	parser.add_argument('barangay_id', type=str, help='Physical Address of the Distribution Center', location='form')
 	parser.add_argument('capacity', type=int, help='Distribution Center Capacity', location='form')
 	parser.add_argument('Authorization', location='headers')
 
@@ -56,39 +64,38 @@ class DistCenterDto:
 class EvacueesDto:
 	api = Namespace('evacuees', description='Evacuees related operations')
 	evacuees = api.model('evacuees',{
-		'name' : fields.String(required=True, description='Evacuees Name'),
-		'home_id' : fields.String(required=True, description='Evacuees home_id'),
-		'is_house_leader' : fields.Boolean(required=True,description='Is evacuee leader of the household?'),
-		'gender' : fields.String(required=True, description='Evacuees gender'),
+		'first_name' : fields.String(required=True, description='Evacuees First Name'),
+		'middle_name' : fields.String(required=True, description='Evacuees Middle Name'),
+		'last_name' : fields.String(required=True, description='Evacuees Last Name'),
 		'age' : fields.Integer(required=True, description='Evacueesr age'),
+		'gender' : fields.String(required=True, description='Evacuees gender'),
 		'religion' : fields.String(required=True, description='Evacuees religion'),
 		'civil_status' : fields.String(required=True, description='Evacuees civil_status'),
-		'educ_attainment' : fields.String(required=True, description='Evacuees educ_attainment'),
-		'occupation' : fields.String(required=True, description='Evacuees occupation'),
-		'public_id' : fields.String(description='Evacuees Public Id')
+		'public_id' : fields.String(description='Evacuees Public Id'),
+		'family_id' : fields.String(description='Family Public Id'),
+		'barangay_id' : fields.String(description='Barangay Id')
 	})
 
 	parser = api.parser()
-	parser.add_argument('name', type=str, help='Evacuees Name', location='form')
-	parser.add_argument('home_id', type=str, help='Evacuees home_id', location='form')
-	parser.add_argument('is_house_leader', type=bool, help='Is evacuee leader of household?', location='form')
-	parser.add_argument('gender', type=str, help='Evacuees gender', location='form')
+	parser.add_argument('first_name', type=str, help='Evacuees First Name', location='form')
+	parser.add_argument('middle_name', type=str, help='Evacuees Middle Name', location='form')
+	parser.add_argument('last_name', type=str, help='Evacuees Last Name', location='form')
 	parser.add_argument('age', type=int, help='Evacuees age', location='form')
+	parser.add_argument('gender', type=str, help='Evacuees gender', location='form')
 	parser.add_argument('religion', type=str, help='Evacuees religion', location='form')
 	parser.add_argument('civil_status', type=str, help='Evacuees civil_status', location='form')
-	parser.add_argument('educ_attainment', type=str, help='Evacuees educ_attainment', location='form')
-	parser.add_argument('occupation', type=str, help='Evacuees occupation', location='form')
+	parser.add_argument('family_id', type=str, help='family public id', location='form')
+	parser.add_argument('barangay_id', type=int, help='barangy id', location='form')
 	parser.add_argument('Authorization', location='headers')
 
-class HouseDto:
-	api = Namespace('household', description='Household related operations')
-	household = api.model('household',{
-		'address' : fields.String(required=True, description='Physical Address of the Household'),
-		'public_id' : fields.String(description='Household Public Id')
+class FamilyDto:
+	api = Namespace('family', description='Family related operations')
+	family = api.model('household',{
+		'name' : fields.String(required=True, description='Name of the Family'),
+		'public_id' : fields.String(description='Family Public Id')
 	})
-
 	parser = api.parser()
-	parser.add_argument('address', type=str, help='Physical Address of the Household', location='form')
+	parser.add_argument('name', type=str, help='Name of the Family, eg. "Smith-Rogers"', location='form')
 	parser.add_argument('Authorization', location='headers')
 	
 class ManageCenterDto:
