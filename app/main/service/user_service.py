@@ -79,6 +79,11 @@ def delete_user(public_id):
 	user = Account.query.filter_by(public_id=public_id).first()
 	user.isActive = False
 	db.session.commit()
+	response_object = {
+		'status': 'Success',
+		'message': 'Delete Successful.'
+	}
+	return response_object, 200
 
 #can't update username
 def update_user(public_id, data):

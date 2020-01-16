@@ -73,7 +73,7 @@ class EvacueesDto:
 		'civil_status' : fields.String(required=True, description='Evacuees civil_status'),
 		'public_id' : fields.String(description='Evacuees Public Id'),
 		'family_id' : fields.String(description='Family Public Id'),
-		'barangay_id' : fields.String(description='Barangay Id')
+		'barangay_id' : fields.Integer(description='Barangay Id')
 	})
 
 	parser = api.parser()
@@ -96,6 +96,23 @@ class FamilyDto:
 	})
 	parser = api.parser()
 	parser.add_argument('name', type=str, help='Name of the Family, eg. "Smith-Rogers"', location='form')
+	parser.add_argument('Authorization', location='headers')
+	
+class AnnounceDto:
+	api = Namespace('announcement', description='Announcement related operations')
+	announce = api.model('announcement',{
+		'title' : fields.String(required=True, description='Announcement Title'),
+		'details' : fields.String(required=False, description='Announcement Details'),
+		'type' : fields.Integer(description='Announcement Type'),
+		'public_id' : fields.String(description='Public Id'),
+		'post_date' : fields.String(required=False, description='Post Date'),
+		'last_edit_date' : fields.String(required=False, description='Last Edit Date'),
+		'isActive' : fields.Boolean(description='Announcement isActive')
+	})
+	parser = api.parser()
+	parser.add_argument('title', type=str, help='Announcement Title', location='form')
+	parser.add_argument('details', type=str, help='Announcement Detail', location='form')
+	parser.add_argument('type', type=int, help='Announcement Type', location='form')
 	parser.add_argument('Authorization', location='headers')
 	
 class ManageCenterDto:
