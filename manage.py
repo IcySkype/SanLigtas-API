@@ -22,12 +22,14 @@ manager.add_command('db', MigrateCommand)
 from app.main.service.user_service import role_init
 from app.main.service.distcenter_service import brgy_init
 from app.main.service.announcement_service import type_init
+from app.main.service.goods_service import type_init as init_goodtype
 @manager.command
 def init():
 	print("Initializing default values.")
 	role_init()
 	brgy_init()
 	type_init()
+	init_goodtype()
 	print("Default values loaded into database.")
 	
 

@@ -8,9 +8,8 @@ from .main.controller.announcement_controller import api as ann_ns
 from .main.controller.distcenter_controller import api as dcenter_ns
 from .main.controller.evacuees_controller import api as evacuee_ns
 from .main.controller.family_controller import api as family_ns
-#from .main.controller.manage_controller import api as manage_center_ns
 #from .main.controller.upload_controller import api as upload_ns
-#from .main.controller.goods_controller import api as rgoods_ns
+from .main.controller.goods_controller import api as rgoods_ns
 
 blueprint = Blueprint('api', __name__)
 
@@ -27,9 +26,8 @@ api.add_namespace(ann_ns, path='/announcement')
 api.add_namespace(dcenter_ns, path='/center')
 api.add_namespace(evacuee_ns, path='/evacuees')
 api.add_namespace(family_ns, path='/family')
-#api.add_namespace(manage_center_ns)
 #api.add_namespace(upload_ns)
-#api.add_namespace(rgoods_ns, path='/rgoods')
+api.add_namespace(rgoods_ns, path='/goods')
 
 
 

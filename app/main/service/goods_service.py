@@ -2,37 +2,42 @@ import uuid
 import datetime
 
 from app.main import db
-from app.main.model.goods import RGoods
+from app.main.model.goods import Goods, GoodType
 from app.main.model.distcenter import DistCenter
 
+def type_init():
+	if GoodType.query.count() == 0:
+		default_type= ['Money', 'Food', 'Clothing', 'Cleaning', 'Misc']
+		for name in default_type:
+			new_brgy = GoodType(name=name)
+			db.session.add(new_brgy)
+			db.session.commit()
+			
+def check_type(id):
+	brgy = GoodType.query.filter_by(id=id).first()
+	return brgy.name
 
 def save_new_rgoods(data):
-	rgoods = RGoods.query.filter_by(code=data['code']).first()
-	dcenter = DistCenter.query.filter_by(public_id=data['center_id']).first()
-	if not dcenter:
-		response_object = {
-			'status' : 'fail',
-			'message' : 'Distribution Center does not exist.'
-		}
-		return response_object, 409
+	rgoods = Goods.query.filter_by(name=data['name'], center_id=data['center_id']).first()
 	if not rgoods:
-		new_goods = RGoods(
+		dcenter = DistCenter.query.filter_by(public_id=data['center_id']).first()
+		if not dcenter:
+			response_object = {
+				'status' : 'fail',
+				'message' : 'Center does not exist.'
+			}
+			return response_object, 409
+		new_goods = Goods(
 			name=data['name'],
-			code=data['code'],
+			details=data['details'],
 			type=data['type'],
 			amount=data['amount'],
-
-			center_id=data['center_id'],
-			received_date=data['received_date'],
-			received_from=data['received_from'],
-			#distribution_date=data['distribution_date'],
-
-			expiry=data['expiry'],
-			size=data['size'],
-			clothing_type=data['clothing_type'],
-			condition=data['condition'],
-
-			status="New"
+			received_date=datetime.datetime.utcnow(),
+			distribution_date=None,
+			status="New",
+			isActive=True,
+			public_id=str(uuid.uuid4()),
+			center_id=data['center_id']
 		)
 		save_changes(new_goods)
 		response_object = {
@@ -43,49 +48,32 @@ def save_new_rgoods(data):
 	else:
 		response_object = {
 			'status' : 'fail',
-			'message' : 'Code already used.'
+			'message' : 'Goods already exist for that center. Try restocking.'
 		}
 		return response_object, 409
 
 
 def get_all_rgoods():
-	return RGoods.query.all()
+	return Goods.query.all()
 
-def get_rgoods(code):
-	return RGoods.query.filter_by(code=code).first()
+def get_rgoods(public_id):
+	return Goods.query.filter_by(public_id=public_id).first()
 
 def save_changes(data):
 	db.session.add(data)
 	db.session.commit()
 
-def update_rgoods(code, data):
-	#code should not change.
-	rgoods = RGoods.query.filter_by(code=code).first()
-	dcenter = DistCenter.query.filter_by(public_id=data['center_id']).first()
-	if not dcenter:
-		response_object = {
-			'status' : 'fail',
-			'message' : 'Distribution Center does not exist.'
-		}
-		return response_object, 409
+def update_rgoods(public_id, data):
+	#public_id should not change.
+	rgoods = Goods.query.filter_by(public_id=public_id).first()
 	if rgoods:
-		rgoods.name=data['name'],
-		rgoods.code=data['code'],
-		rgoods.type=data['type'],
-		rgoods.amount=data['amount'],
-
-		rgoods.center_id=data['center_id'],
-		rgoods.received_date=data['received_date'],
-		rgoods.received_from=data['received_from'],
-		rgoods.distribution_date=data['distribution_date'],
-
-		rgoods.expiry=data['expiry'],
-		rgoods.size=data['size'],
-		rgoods.clothing_type=data['clothing_type'],
-		rgoods.condition=data['condition'],
-
-		rgoods.status=data['status']
-
+		name=data['name']
+		details=data['details']
+		type=data['type']
+		amount=data['amount']
+		received_date=datetime.datetime.utcnow()
+		status=data['status']
+		isActive=True
 		db.session.commit()
 		response_object = {
 			'status' : 'success',
@@ -99,17 +87,17 @@ def update_rgoods(code, data):
 		}
 		return response_object, 409
 
-def distribute(code, date):
-	rgoods = RGoods.query.filter_by(code=code).first()
+def distribute(public_id):
+	rgoods = Goods.query.filter_by(public_id=public_id).first()
 	if rgoods:
-		rgoods.distribution_date=date,
+		rgoods.distribution_date=datetime.datetime.utcnow(),
 		rgoods.status="Distributed"
 		db.session.commit()
 		response_object = {
 			'status' : 'success',
 			'message' : 'Goods distributed'
 		}
-		return response_object, 200
+		return response_object, 201
 	else:
 		response_object = {
 			'status' : 'fail',
@@ -118,14 +106,14 @@ def distribute(code, date):
 		return response_object, 409
 
 
-def delete_rgoods(code):
-	rgoods = RGoods.query.filter_by(code=code).first()
+def delete_rgoods(public_id):
+	rgoods = Goods.query.filter_by(public_id=public_id).first()
 	if rgoods:
-			db.session.delete(rgoods)
+			rgoods.isActive = False
 			db.session.commit()
 			response_object = {
 			'status' : 'success',
-			'message' : 'Goods deleted'
+			'message' : 'Goods deactivated'
 			}
 			return response_object, 204
 	else:
@@ -134,14 +122,3 @@ def delete_rgoods(code):
 			'message' : 'No matching goods found.'
 		}
 		return response_object, 409
-		
-
-def search_center(search_term):
-	results = RGoods.query.filter(RGoods.center_id.like("%"+search_term+"%"))
-	print(results)
-	return results
-
-def search_code(search_term):
-	results = RGoods.query.filter(RGoods.code.like("%"+search_term+"%"))
-	print(results)
-	return results

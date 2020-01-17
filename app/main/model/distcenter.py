@@ -14,6 +14,7 @@ class DistCenter(db.Model):
 	public_id = db.Column(db.String(300), nullable = False, unique=True)
 	evacs = db.relationship('Evacuees', backref='center')
 	managers = db.relationship('Account', secondary=manage, backref=db.backref('centers', lazy = 'dynamic'))
+	goods = db.relationship('Goods', backref='center')
 	
 class Barangay(db.Model):
 	__tablename__ = "barangay"

@@ -1,13 +1,15 @@
 from flask import request
 from flask_restplus import Resource
 
-from ..util.dto import DistCenterDto
+from ..util.dto import DistCenterDto, ManageCenterDto, RegisterToCenterDto
 from ..util.decoratoradmin import token_required, admin_token_required
 from ..service.distcenter_service import save_new_dcenter, get_all_sorted, get_a_dcenter, update_dcenter, delete_dcenter, search_center, manage, register
 
 api = DistCenterDto.api
 _dcenter = DistCenterDto.distcenter
 parser = DistCenterDto.parser
+manageparser = ManageCenterDto.parser
+registerparser = RegisterToCenterDto.parser
 
 
 @api.route('/')
@@ -79,7 +81,7 @@ class SearchByName(Resource):
 @api.param('public_id', 'The Distribution Center ID')
 @api.param('user_id', 'Account ID')
 class Manager(Resource):
-	@api.doc('Assign manager')
+	@api.doc('Assign manager', parser=manageparser)
 	@api.response(200, 'Manager Added.')
 	def post(self, public_id, user_id):
 		return manage(public_id, user_id)
@@ -88,7 +90,7 @@ class Manager(Resource):
 @api.param('public_id', 'The Distribution Center ID')
 @api.param('evac_id', 'Evacuee ID')
 class Register(Resource):
-	@api.doc('Register evacuee to center')
+	@api.doc('Register evacuee to center', parser=registerparser)
 	@api.response(200, 'Evacuee registered to center.')
 	def post(self, public_id, evac_id):
 		return register(public_id, evac_id)

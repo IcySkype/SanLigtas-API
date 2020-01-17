@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from ..util.dto import RGoodsDto
 from ..util.decoratoradmin import token_required, admin_token_required
-from ..service.goods_service import save_new_rgoods, get_all_rgoods, get_rgoods, update_rgoods, delete_rgoods, distribute, search_center, search_code
+from ..service.goods_service import save_new_rgoods, get_all_rgoods, get_rgoods, update_rgoods, delete_rgoods, distribute
 
 api = RGoodsDto.api
 _rgoods = RGoodsDto.rgoods
@@ -29,16 +29,16 @@ class RGoodsList(Resource):
 		return save_new_rgoods(data=data)
 
 
-@api.route('/<code>')
-@api.param('code', 'Relief Goods Code')
+@api.route('/<public_id>')
+@api.param('public_id', 'Relief Goods Code')
 @api.response(404, 'Relief Goods not found.')
-class DistCenter(Resource):
+class RGoods(Resource):
 	@api.doc('get relief goods')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@token_required
 	@api.marshal_list_with(_rgoods)
-	def get(self, code):
-		rgoods = get_rgoods(code)
+	def get(self, public_id):
+		rgoods = get_rgoods(public_id)
 		if not rgoods:
 			api.abort(404)
 		else:
@@ -48,8 +48,8 @@ class DistCenter(Resource):
 	@api.doc('delete relief goods')
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@admin_token_required
-	def delete(self, code):
-		rgoods = delete_rgoods(code)
+	def delete(self, public_id):
+		rgoods = delete_rgoods(public_id)
 		if not rgoods:
 			api.abort(404)
 		else:
@@ -59,21 +59,25 @@ class DistCenter(Resource):
 	@api.doc('update relief goods', parser=parser)
 	@api.header('Authorization', 'JWT TOKEN', required=True)
 	@admin_token_required
-	def put(self, code):
+	def put(self, public_id):
 		data = request.form
-		rgoods = update_rgoods(code=code, data=data)
+		rgoods = update_rgoods(public_id=public_id, data=data)
 		if not rgoods:
 			api.abort(404)
 		else:
 			return rgoods
 
-			
-@api.route('/search/<searchterm>')			
-class SearchByCenter(Resource):
-	@api.doc('search by distribution center')
-	@api.response(200, 'Results found.')
-	@api.marshal_list_with(_rgoods, envelope='data')
-	def get(self, searchterm):
-		print(searchterm)
-		results = search_center(searchterm)
-		return results
+@api.route('/<public_id>/distribute')
+@api.param('public_id', 'Relief Goods Code')
+@api.response(404, 'Relief Goods not found.')
+class DistRGoods(Resource):
+	@api.doc('distribute goods', parser=parser)
+	@api.header('Authorization', 'JWT TOKEN', required=True)
+	@api.response(201, 'Goods distributed')
+	@admin_token_required
+	def post(self, public_id):
+		rgoods = distribute(public_id)
+		if not rgoods:
+			api.abort(404)
+		else:
+			return rgoods
