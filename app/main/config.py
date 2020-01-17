@@ -1,5 +1,5 @@
 import os
-postgres_local_base = 'postgresql://ewxybuxwluzggk:d0df279a43db226dd3b8b9a8bade3e6e68c0700d21b3f953fa00a182dc6936eb@ec2-54-235-208-103.compute-1.amazonaws.com:5432/d8from30f48hfj'
+postgres_local_base = 'postgres://veysrvdoempaeh:2befd9f1bc4d37fb44f4e48a18af75fac9e70b89cb31cc2a48b2d60bedb4ecd4@ec2-174-129-33-156.compute-1.amazonaws.com:5432/de8deb6hf9k9s5'
 #postgres_local_base = 'postgresql://postgres:postgres@localhost:5432/sldb2'
 #os.environ['DATABASE_URL']
 
