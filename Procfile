@@ -1,3 +1,3 @@
 release: python manage.py db upgrade
 heroku-postbuild : python manage.py init
-web: python manage.py run
+worker: python manage.py run
