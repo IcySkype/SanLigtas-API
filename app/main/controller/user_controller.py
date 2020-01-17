@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from ..util.dto import UserDto, PasswordDto
 from ..util.decoratoradmin import token_required
-from ..service.user_service import save_new_user, get_all_users, get_a_user, delete_user, update_user, update_password, search_by_user
+from ..service.user_service import save_new_user, get_all_users, get_acc_user, get_a_user, delete_user, update_user, update_password, search_by_user
 
 api = UserDto.api
 _user = UserDto.user
@@ -36,7 +36,7 @@ class User(Resource):
 	@api.marshal_list_with(_user)
 	def get(self, public_id):
 		#gets a specific user with public_id
-		user = get_a_user(public_id)
+		user = get_acc_user(public_id)
 		if not user:
 			api.abort(404)
 		else:

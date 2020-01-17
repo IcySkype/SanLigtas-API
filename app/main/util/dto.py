@@ -35,6 +35,7 @@ class PasswordDto:
 	parser.add_argument('username', type=str, help='User Username', location='form')
 	parser.add_argument('old_pass', type=str, help='Current Password', location='form')
 	parser.add_argument('new_pass', type=str, help='New Password', location='form')
+	parser.add_argument('Authorization', location='headers')
 
 class AuthDto:
 	api = Namespace('authadmin', description='Authentication related operations')

@@ -1,4 +1,4 @@
-from app.main.model.user import Account
+from app.main.model.user import Account, User
 from ..service.blacklist_service import save_token
 
 
@@ -27,7 +27,7 @@ class Auth:
 		except Exception as e:
 			response_object = {
 				'status' : 'fail',
-				'message' : e
+				'message' : 'Unknown error. Try again'
 			}
 			return response_object, 500
 
@@ -63,14 +63,14 @@ class Auth:
 			resp = Account.decode_auth_token(auth_token)
 			if not isinstance(resp, str):
 				user = Account.query.filter_by(id=resp).first()
-				user_d = Account.query.filter_by(public_id=user.public_id).first()
+				user_d = User.query.filter_by(acc_id=user.public_id).first()
 				response_object = {
 					'status' : 'success',
 					'data' : {
 						'user_id' : user.id,
 						'username' : user.username,
-						'first_name' : user.first_name,
-						'last_name' : user.last_name,
+						'first_name' : user_d.first_name,
+						'last_name' : user_d.last_name,
 						'role' : user.role,
 						'registered_on' : str(user_d.registered_on)
 					}

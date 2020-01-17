@@ -1,5 +1,6 @@
 import uuid
 import datetime
+import json
 
 from app.main import db
 from app.main.model.user import User, Account, Role
@@ -67,12 +68,43 @@ def update_password(username, data):
 
 #account left outer join user
 def get_all_users():
-	return db.session.query(Account.public_id, Account.username, User.first_name, User.middle_name, User.last_name, User.gender, User.registered_on, Account.role, Account.isActive).outerjoin(User, Account.public_id == User.acc_id).all()
+	userlist = db.session.query(Account.public_id, Account.username, User.first_name, User.middle_name, User.last_name, User.gender, User.registered_on, Account.role, Account.isActive).outerjoin(User, Account.public_id == User.acc_id).all()
+	_userlist = []
+	for user in userlist:
+		somedict = {
+			'public_id' : user[0],
+			'username' : user[1],
+			'first_name' : user[2],
+			'middle_name' : user[3],
+			'last_name' : user[4],
+			'gender' : user[5],
+			'registered_on' : str(user[6]),
+			'role_id' : user[7],
+			'isActive' : user[8]
+		}
+		_userlist.append(somedict)
+	return _userlist
 
 #account left outer join user, specific user
-def get_a_user(public_id):
-	return db.session.query(Account.public_id, Account.username, User.first_name, User.middle_name, User.last_name, User.gender, User.registered_on, Account.role, Account.isActive).outerjoin(User, Account, Account.public_id == User.acc_id).filter(Account.public_id == public_id)
+def get_acc_user(public_id):
+	user = db.session.query(Account.public_id, Account.username, User.first_name, User.middle_name, User.last_name, User.gender, User.registered_on, Account.role, Account.isActive).outerjoin(User, Account.public_id == User.acc_id).filter(Account.public_id==public_id).first()
+	_userlist = []
+	somedict = {
+		'public_id' : user[0],
+		'username' : user[1],
+		'first_name' : user[2],
+		'middle_name' : user[3],
+		'last_name' : user[4],
+		'gender' : user[5],
+		'registered_on' : str(user[6]),
+		'role_id' : user[7],
+		'isActive' : user[8]
+	}
+	_userlist.append(somedict)
+	return _userlist
 
+def get_a_user(public_id):
+	return User.query.filter_by(acc_id=public_id).first()
 
 #delete is now deactivate.
 def delete_user(public_id):
@@ -85,7 +117,7 @@ def delete_user(public_id):
 	}
 	return response_object, 200
 
-#can't update username
+
 def update_user(public_id, data):
 	user = User.query.filter_by(acc_id=public_id).first()
 	if user:
