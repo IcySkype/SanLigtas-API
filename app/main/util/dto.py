@@ -5,11 +5,13 @@ class UserDto:
 	user = api.model('user', {
         'username': fields.String(required=True, description='user username'),
         'password': fields.String(required=True, description='user password'),
-        'first_name': fields.String(required=True, description='user first name'),
+        'first_name': fields.String(description='user first name'),
 		'middle_name': fields.String(description='user middle name'),
-        'last_name': fields.String(required=True, description='user last name'),
+        'last_name': fields.String(description='user last name'),
         'role_id': fields.Integer(required=True, description='user role'),
-        'gender': fields.String(required=True, description='user gender'),
+        'gender': fields.String(description='user gender'),
+		'registered_on': fields.String(description='registered on date'),
+		'isActive': fields.Boolean(description='user activity'),
         'public_id': fields.String(description='user Identifier')
     })
 
